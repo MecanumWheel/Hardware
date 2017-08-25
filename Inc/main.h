@@ -57,6 +57,12 @@
 /* Private define ------------------------------------------------------------*/
 
 /* USER CODE BEGIN Private defines */
+#define ULTRASONIC_TRIGSEL				0x01
+#define ULTRASONIC_CAPTURE_1			0x02
+#define ULTRASONIC_CAPTURE_2			0x04
+#define ULTRASONIC_SGNEDGE_1			0x08
+#define ULTRASONIC_SGNEDGE_2			0x10
+
 
 /* USER CODE END Private defines */
 

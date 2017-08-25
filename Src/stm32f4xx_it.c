@@ -37,10 +37,11 @@
 #include "cmsis_os.h"
 
 /* USER CODE BEGIN 0 */
-
+extern uint8_t Ultrasonic_flags;
 /* USER CODE END 0 */
 
 /* External variables --------------------------------------------------------*/
+extern TIM_HandleTypeDef htim1;
 
 /******************************************************************************/
 /*            Cortex-M4 Processor Interruption and Exception Handlers         */ 
@@ -157,6 +158,42 @@ void SysTick_Handler(void)
 /* For the available peripheral interrupt handler names,                      */
 /* please refer to the startup file (startup_stm32f4xx.s).                    */
 /******************************************************************************/
+
+/**
+* @brief This function handles TIM1 update interrupt and TIM10 global interrupt.
+*/
+void TIM1_UP_TIM10_IRQHandler(void)
+{
+  /* USER CODE BEGIN TIM1_UP_TIM10_IRQn 0 */
+	if((Ultrasonic_flags & ULTRASONIC_TRIGSEL) == 0U){
+		htim1.Instance->CCMR1 |= TIM_OCMODE_FORCED_INACTIVE;
+		htim1.Instance->CCMR1 |= (TIM_OCMODE_PWM1 << 8U);
+		Ultrasonic_flags &= ~ULTRASONIC_TRIGSEL;									//Changes flag configuration, meaning that CH2 will now generate pulse
+	}
+	else{
+		
+	}
+	
+  /* USER CODE END TIM1_UP_TIM10_IRQn 0 */
+  HAL_TIM_IRQHandler(&htim1);
+  /* USER CODE BEGIN TIM1_UP_TIM10_IRQn 1 */
+
+  /* USER CODE END TIM1_UP_TIM10_IRQn 1 */
+}
+
+/**
+* @brief This function handles TIM1 capture compare interrupt.
+*/
+void TIM1_CC_IRQHandler(void)
+{
+  /* USER CODE BEGIN TIM1_CC_IRQn 0 */
+
+  /* USER CODE END TIM1_CC_IRQn 0 */
+  HAL_TIM_IRQHandler(&htim1);
+  /* USER CODE BEGIN TIM1_CC_IRQn 1 */
+
+  /* USER CODE END TIM1_CC_IRQn 1 */
+}
 
 /* USER CODE BEGIN 1 */
 

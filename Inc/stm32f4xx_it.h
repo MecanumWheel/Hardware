@@ -52,6 +52,8 @@ void BusFault_Handler(void);
 void UsageFault_Handler(void);
 void DebugMon_Handler(void);
 void SysTick_Handler(void);
+void TIM1_UP_TIM10_IRQHandler(void);
+void TIM1_CC_IRQHandler(void);
 
 #ifdef __cplusplus
 }
