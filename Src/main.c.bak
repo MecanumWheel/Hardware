@@ -51,7 +51,7 @@
 #include "cmsis_os.h"
 
 /* USER CODE BEGIN Includes */
-//
+
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
