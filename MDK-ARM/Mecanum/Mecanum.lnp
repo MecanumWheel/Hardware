@@ -1,4 +1,4 @@
---cpu Cortex-M4.fp
+--cpu=Cortex-M4.fp
 "mecanum\stm32f4xx_hal_cortex.o"
 "mecanum\stm32f4xx_hal_flash.o"
 "mecanum\stm32f4xx_hal_pwr_ex.o"
@@ -13,11 +13,23 @@
 "mecanum\stm32f4xx_hal_flash_ramfunc.o"
 "mecanum\stm32f4xx_hal_gpio.o"
 "mecanum\stm32f4xx_hal_tim_ex.o"
+"mecanum\stm32f4xx_hal_uart.o"
 "mecanum\stm32f4xx_it.o"
 "mecanum\stm32f4xx_hal_msp.o"
 "mecanum\main.o"
+"mecanum\freertos.o"
+"mecanum\stm32f4xx_hal_timebase_tim.o"
 "mecanum\startup_stm32f401xe.o"
 "mecanum\system_stm32f4xx.o"
+"mecanum\tasks.o"
+"mecanum\queue.o"
+"mecanum\croutine.o"
+"mecanum\port.o"
+"mecanum\cmsis_os.o"
+"mecanum\heap_4.o"
+"mecanum\list.o"
+"mecanum\timers.o"
+"mecanum\event_groups.o"
 --library_type=microlib --strict --scatter "Mecanum\Mecanum.sct"
 --diag_suppress=L6329 --summary_stderr --info summarysizes --map --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers

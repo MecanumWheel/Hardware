@@ -1,0 +1,13 @@
+mecanum\freertos.o: ../Src/freertos.c
+mecanum\freertos.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h
+mecanum\freertos.o: C:\Games\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
+mecanum\freertos.o: C:\Games\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+mecanum\freertos.o: ../Inc/FreeRTOSConfig.h
+mecanum\freertos.o: ../Inc/main.h
+mecanum\freertos.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h
+mecanum\freertos.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h
+mecanum\freertos.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/deprecated_definitions.h
+mecanum\freertos.o: ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F/portmacro.h
+mecanum\freertos.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h
+mecanum\freertos.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h
+mecanum\freertos.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h

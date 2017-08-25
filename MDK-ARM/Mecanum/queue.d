@@ -1,0 +1,16 @@
+mecanum\queue.o: ../Middlewares/Third_Party/FreeRTOS/Source/queue.c
+mecanum\queue.o: C:\Games\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
+mecanum\queue.o: C:\Games\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+mecanum\queue.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h
+mecanum\queue.o: C:\Games\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
+mecanum\queue.o: C:\Games\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+mecanum\queue.o: ../Inc/FreeRTOSConfig.h
+mecanum\queue.o: ../Inc/main.h
+mecanum\queue.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h
+mecanum\queue.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h
+mecanum\queue.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/deprecated_definitions.h
+mecanum\queue.o: ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F/portmacro.h
+mecanum\queue.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h
+mecanum\queue.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h
+mecanum\queue.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h
+mecanum\queue.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h
