@@ -254,7 +254,43 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
+#include <stdint.h>
 
+#define CRC16 0x8005
+
+uint16_t gen_crc16(const uint8_t *data, uint16_t size)
+{
+    uint16_t out = 0;
+    int bits_read = 0, bit_flag;
+
+    /* Sanity check: */
+    if(data == NULL)
+        return 0;
+
+    while(size > 0)
+    {
+        bit_flag = out >> 15;
+
+        /* Get next bit: */
+        out <<= 1;
+        out |= (*data >> (7 - bits_read)) & 1;
+
+        /* Increment bit counter: */
+        bits_read++;
+        if(bits_read > 7)
+        {
+            bits_read = 0;
+            data++;
+            size--;
+        }
+
+        /* Cycle check: */
+        if(bit_flag)
+            out ^= CRC16;
+
+    }
+    return out;
+}
 /* USER CODE END 4 */
 
 /* StartDefaultTask function */
@@ -263,10 +299,25 @@ void StartDefaultTask(void const * argument)
 
   /* USER CODE BEGIN 5 */
   /* Infinite loop */
+	const uint8_t size = 4;
+	uint8_t message[size];
+	message[0] = 128;
+	message[1] = 0;
+	message[2] = 30;
+	message[3] = gen_crc16(message, 3);
+	
+	uint8_t flag = 0;
   for(;;)
   {
-    osDelay(1000);
-		HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_6);
+    if (flag)
+			message[2] = 30;
+		else
+			message[2] = 70;
+		flag = ~flag;
+		message[3] = gen_crc16(message, 3);
+		
+		HAL_UART_Transmit(&huart3, message, size, 1000);
+		osDelay(1000);
   }
   /* USER CODE END 5 */ 
 }
