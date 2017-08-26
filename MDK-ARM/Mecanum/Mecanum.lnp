@@ -17,6 +17,7 @@
 "mecanum\stm32f4xx_hal_msp.o"
 "mecanum\main.o"
 "mecanum\freertos.o"
+"mecanum\stm32f4xx_hal_timebase_tim.o"
 "mecanum\startup_stm32f401xe.o"
 "mecanum\system_stm32f4xx.o"
 "mecanum\tasks.o"
