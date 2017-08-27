@@ -242,7 +242,7 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOC_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_6, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_6|GPIO_PIN_8|GPIO_PIN_9, GPIO_PIN_RESET);
 
   /*Configure GPIO pin : PA0 */
   GPIO_InitStruct.Pin = GPIO_PIN_0;
@@ -250,8 +250,8 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : PC6 */
-  GPIO_InitStruct.Pin = GPIO_PIN_6;
+  /*Configure GPIO pins : PC6 PC8 PC9 */
+  GPIO_InitStruct.Pin = GPIO_PIN_6|GPIO_PIN_8|GPIO_PIN_9;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
@@ -318,7 +318,7 @@ void StartMotorControl(void const * argument)
 	message[0] = ADDRES;
 	message[1] = CMD;
 	
-	uint8_t deltaSpeed = DELTA_SPEED;
+	int8_t deltaSpeed = DELTA_SPEED;
 	uint8_t speed = START_SPEED;
 
 	for(;;)
@@ -327,14 +327,16 @@ void StartMotorControl(void const * argument)
 		
 		if (speed == 0)
 		{
-			deltaSpeed = deltaSpeed;
-			HAL_GPIO_WritePin(GPIOC, GPIO_PIN_6, GPIO_PIN_SET);
+			deltaSpeed = DELTA_SPEED;
+			HAL_GPIO_WritePin(GPIOC, GPIO_PIN_8, GPIO_PIN_SET);
+			HAL_GPIO_WritePin(GPIOC, GPIO_PIN_9, GPIO_PIN_RESET);
 		}
 		
 		if (speed == MAX_SPEED)
 		{
-			deltaSpeed = -deltaSpeed;
-			HAL_GPIO_WritePin(GPIOC, GPIO_PIN_6, GPIO_PIN_RESET);
+			deltaSpeed = -DELTA_SPEED;
+			HAL_GPIO_WritePin(GPIOC, GPIO_PIN_8, GPIO_PIN_RESET);
+			HAL_GPIO_WritePin(GPIOC, GPIO_PIN_9, GPIO_PIN_SET);
 		}
 		
 		speed &= MAX_SPEED;
@@ -343,7 +345,7 @@ void StartMotorControl(void const * argument)
 		
 		HAL_UART_Transmit(&huart3, message, SIZE, 500);
 		
-		osDelay(200);
+		osDelay(100);
 		speed += deltaSpeed;
 
   }

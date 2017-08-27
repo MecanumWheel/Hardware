@@ -3,7 +3,7 @@
 <title>Static Call Graph - [prj\prj.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image prj\prj.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060300: Last Updated: Sun Aug 27 19:59:54 2017
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060300: Last Updated: Sun Aug 27 20:24:44 2017
 <BR><P>
 <H3>Maximum Stack Usage =        204 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -411,7 +411,7 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> main.o(.constdata)
 </UL>
-<P><STRONG><a name="[2b]"></a>StartMotorControl</STRONG> (Thumb, 98 bytes, Stack size 16 bytes, main.o(i.StartMotorControl))
+<P><STRONG><a name="[2b]"></a>StartMotorControl</STRONG> (Thumb, 120 bytes, Stack size 16 bytes, main.o(i.StartMotorControl))
 <BR><BR>[Stack]<UL><LI>Max Depth = 88<LI>Call Chain = StartMotorControl &rArr; osDelay &rArr; vTaskDelay &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
 </UL>
 <BR>[Calls]<UL><LI><a href="#[4c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osDelay
@@ -823,7 +823,7 @@ Local Symbols
 <LI><a href="#[39]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_NVIC_SetPriority
 </UL>
 
-<P><STRONG><a name="[48]"></a>MX_GPIO_Init</STRONG> (Thumb, 122 bytes, Stack size 32 bytes, main.o(i.MX_GPIO_Init))
+<P><STRONG><a name="[48]"></a>MX_GPIO_Init</STRONG> (Thumb, 126 bytes, Stack size 32 bytes, main.o(i.MX_GPIO_Init))
 <BR><BR>[Stack]<UL><LI>Max Depth = 52<LI>Call Chain = MX_GPIO_Init &rArr; HAL_GPIO_Init
 </UL>
 <BR>[Calls]<UL><LI><a href="#[45]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_GPIO_Init
