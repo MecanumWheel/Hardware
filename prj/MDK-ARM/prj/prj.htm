@@ -3,7 +3,7 @@
 <title>Static Call Graph - [prj\prj.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image prj\prj.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060300: Last Updated: Sun Aug 27 20:24:44 2017
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060300: Last Updated: Sun Aug 27 21:10:04 2017
 <BR><P>
 <H3>Maximum Stack Usage =        204 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -239,9 +239,9 @@ Global Symbols
 <P><STRONG><a name="[80]"></a>__scatterload_rt2</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, init.o(.text), UNUSED)
 
 <P><STRONG><a name="[31]"></a>CalcCRC</STRONG> (Thumb, 22 bytes, Stack size 12 bytes, main.o(i.CalcCRC))
-<BR><BR>[Stack]<UL><LI>Max Depth = 28<LI>Call Chain = CalcCRC &rArr; gen_crc16
+<BR><BR>[Stack]<UL><LI>Max Depth = 28<LI>Call Chain = CalcCRC &rArr; crc16
 </UL>
-<BR>[Calls]<UL><LI><a href="#[32]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;gen_crc16
+<BR>[Calls]<UL><LI><a href="#[32]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;crc16
 </UL>
 <BR>[Called By]<UL><LI><a href="#[2b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;StartMotorControl
 </UL>
@@ -491,8 +491,8 @@ Global Symbols
 
 <P><STRONG><a name="[83]"></a>__scatterload_zeroinit</STRONG> (Thumb, 14 bytes, Stack size unknown bytes, handlers.o(i.__scatterload_zeroinit), UNUSED)
 
-<P><STRONG><a name="[32]"></a>gen_crc16</STRONG> (Thumb, 60 bytes, Stack size 16 bytes, main.o(i.gen_crc16))
-<BR><BR>[Stack]<UL><LI>Max Depth = 16<LI>Call Chain = gen_crc16
+<P><STRONG><a name="[32]"></a>crc16</STRONG> (Thumb, 90 bytes, Stack size 16 bytes, main.o(i.crc16))
+<BR><BR>[Stack]<UL><LI>Max Depth = 16<LI>Call Chain = crc16
 </UL>
 <BR>[Called By]<UL><LI><a href="#[31]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;CalcCRC
 </UL>

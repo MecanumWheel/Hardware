@@ -260,37 +260,50 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
-#include <stdint.h>
 
-#define CRC16 0x8005
+#define POLY 0x8408
+/*
+//                                      16   12   5
+// this is the CCITT CRC 16 polynomial X  + X  + X  + 1.
+// This works out to be 0x1021, but the way the algorithm works
+// lets us use 0x8408 (the reverse of the bit pattern).  The high
+// bit is always assumed to be set, thus we only use 16 bits to
+// represent the 17 bit value.
+*/
 
-uint16_t gen_crc16(const uint8_t *data, uint16_t size)
+uint16_t crc16(uint8_t *data_p, uint16_t length)
 {
-	uint16_t crc;
-	for (int byte = 0; byte < size; byte++) 
-	{
-		crc = crc ^ ((unsigned int)data[byte] << 8);
-		
-		for (uint8_t bit = 0; bit < 8; bit++) 
-		{
-			if (crc & 0x8000)
-			{
-				crc = (crc << 1) ^ 0x1021;
-			} 
-			else
-			{
-				crc = crc << 1;
-			}
-		}
-	}
-	return crc;
+      uint8_t i;
+      uint16_t data;
+      uint16_t crc = 0xffff;
+
+      if (length == 0)
+            return (~crc);
+
+      do
+      {
+            for (i=0, data=(uint16_t)0xff & *data_p++;
+                 i < 8; 
+                 i++, data >>= 1)
+            {
+                  if ((crc & 0x0001) ^ (data & 0x0001))
+                        crc = (crc >> 1) ^ POLY;
+                  else  crc >>= 1;
+            }
+      } while (--length);
+
+      crc = ~crc;
+      data = crc;
+      crc = (crc << 8) | (data >> 8 & 0xff);
+
+      return (crc);
 }
 
 void CalcCRC(uint8_t* message)
 {
-	uint16_t crc = gen_crc16(message, 3);
-	message[3] = 0xFF & (crc);
-	message[4] = 0xFF & (crc >> 8);
+	uint16_t crc = crc16(message, 3);
+	message[3] = 0xFF & (crc >> 8);
+	message[4] = 0xFF & (crc);
 }
 
 
@@ -302,9 +315,9 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 const uint8_t SIZE = 5;
 const uint8_t ADDRES = 128;
 const uint8_t CMD = 0;
-const uint8_t START_SPEED = 0x3F;
+const uint8_t START_SPEED = 0x00;
 const uint8_t DELTA_SPEED = 1;
-const uint8_t MAX_SPEED = 0x3F;
+const uint8_t MAX_SPEED = 0x7F;
 
 /* USER CODE END 4 */
 
@@ -345,7 +358,7 @@ void StartMotorControl(void const * argument)
 		
 		HAL_UART_Transmit(&huart3, message, SIZE, 500);
 		
-		osDelay(100);
+		osDelay(50);
 		speed += deltaSpeed;
 
   }
