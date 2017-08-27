@@ -51,7 +51,7 @@
 #include "cmsis_os.h"
 
 /* USER CODE BEGIN Includes */
-
+#include "float.h"
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
@@ -60,6 +60,7 @@ ADC_HandleTypeDef hadc1;
 SPI_HandleTypeDef hspi3;
 
 TIM_HandleTypeDef htim1;
+TIM_HandleTypeDef htim2;
 
 UART_HandleTypeDef huart1;
 UART_HandleTypeDef huart2;
@@ -72,8 +73,12 @@ osThreadId defaultTaskHandle;
 osThreadId UltrasonicTaskHandle;
 
 SemaphoreHandle_t Ultrasonic_ISR_BS;
-QueueHandle_t Ultrasonic_Q1,Ultrasonic_Q2;
-uint8_t Ultrasonic_flags;
+
+QueueHandle_t Ultrasonic_Queue[4];
+
+BaseType_t Ultrasonic_HPTW_Q1 = pdFALSE, Ultrasonic_HPTW_Q2 = pdFALSE;
+
+uint8_t Ultrasonic_flags = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -85,6 +90,7 @@ static void MX_USART2_UART_Init(void);
 static void MX_USART6_UART_Init(void);
 static void MX_SPI3_Init(void);
 static void MX_ADC1_Init(void);
+static void MX_TIM2_Init(void);
 void StartDefaultTask(void const * argument);
 
 void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
@@ -131,9 +137,10 @@ int main(void)
   MX_USART6_UART_Init();
   MX_SPI3_Init();
   MX_ADC1_Init();
+  MX_TIM2_Init();
 
   /* USER CODE BEGIN 2 */
-
+	
   /* USER CODE END 2 */
 
   /* USER CODE BEGIN RTOS_MUTEX */
@@ -142,6 +149,8 @@ int main(void)
 
   /* USER CODE BEGIN RTOS_SEMAPHORES */
   Ultrasonic_ISR_BS = xSemaphoreCreateBinary();
+	if(!Ultrasonic_ISR_BS)
+		Error_Handler();
   /* USER CODE END RTOS_SEMAPHORES */
 
   /* USER CODE BEGIN RTOS_TIMERS */
@@ -159,8 +168,10 @@ int main(void)
   /* USER CODE END RTOS_THREADS */
 
   /* USER CODE BEGIN RTOS_QUEUES */
-  Ultrasonic_Q1 = xQueueCreate(2, sizeof( unsigned int ) );
-	Ultrasonic_Q2 = xQueueCreate(2, sizeof( unsigned int ) );
+  Ultrasonic_Queue[0] = xQueueCreate(2, sizeof( uint32_t ) );
+	Ultrasonic_Queue[1] = xQueueCreate(2, sizeof( uint32_t ) );
+	Ultrasonic_Queue[2] = xQueueCreate(2, sizeof( uint32_t ) );
+	Ultrasonic_Queue[3] = xQueueCreate(2, sizeof( uint32_t ) );
   /* USER CODE END RTOS_QUEUES */
  
 
@@ -299,21 +310,14 @@ static void MX_TIM1_Init(void)
 
   TIM_MasterConfigTypeDef sMasterConfig;
   TIM_IC_InitTypeDef sConfigIC;
-  TIM_OC_InitTypeDef sConfigOC;
-  TIM_BreakDeadTimeConfigTypeDef sBreakDeadTimeConfig;
 
   htim1.Instance = TIM1;
   htim1.Init.Prescaler = 15;
   htim1.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim1.Init.Period = 49999;
+  htim1.Init.Period = 0xffff;
   htim1.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim1.Init.RepetitionCounter = 0;
   if (HAL_TIM_IC_Init(&htim1) != HAL_OK)
-  {
-    _Error_Handler(__FILE__, __LINE__);
-  }
-
-  if (HAL_TIM_PWM_Init(&htim1) != HAL_OK)
   {
     _Error_Handler(__FILE__, __LINE__);
   }
@@ -325,7 +329,7 @@ static void MX_TIM1_Init(void)
     _Error_Handler(__FILE__, __LINE__);
   }
 
-  sConfigIC.ICPolarity = TIM_INPUTCHANNELPOLARITY_RISING;
+  sConfigIC.ICPolarity = TIM_INPUTCHANNELPOLARITY_BOTHEDGE;
   sConfigIC.ICSelection = TIM_ICSELECTION_DIRECTTI;
   sConfigIC.ICPrescaler = TIM_ICPSC_DIV1;
   sConfigIC.ICFilter = 0;
@@ -339,36 +343,52 @@ static void MX_TIM1_Init(void)
     _Error_Handler(__FILE__, __LINE__);
   }
 
+  if (HAL_TIM_IC_ConfigChannel(&htim1, &sConfigIC, TIM_CHANNEL_3) != HAL_OK)
+  {
+    _Error_Handler(__FILE__, __LINE__);
+  }
+
+  if (HAL_TIM_IC_ConfigChannel(&htim1, &sConfigIC, TIM_CHANNEL_4) != HAL_OK)
+  {
+    _Error_Handler(__FILE__, __LINE__);
+  }
+
+}
+
+/* TIM2 init function */
+static void MX_TIM2_Init(void)
+{
+
+  TIM_MasterConfigTypeDef sMasterConfig;
+  TIM_OC_InitTypeDef sConfigOC;
+
+  htim2.Instance = TIM2;
+  htim2.Init.Prescaler = 15;
+  htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim2.Init.Period = 24999;
+  htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+  if (HAL_TIM_PWM_Init(&htim2) != HAL_OK)
+  {
+    _Error_Handler(__FILE__, __LINE__);
+  }
+
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+  if (HAL_TIMEx_MasterConfigSynchronization(&htim2, &sMasterConfig) != HAL_OK)
+  {
+    _Error_Handler(__FILE__, __LINE__);
+  }
+
   sConfigOC.OCMode = TIM_OCMODE_PWM1;
   sConfigOC.Pulse = 10;
   sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
-  sConfigOC.OCNPolarity = TIM_OCNPOLARITY_HIGH;
-  sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
-  sConfigOC.OCIdleState = TIM_OCIDLESTATE_RESET;
-  sConfigOC.OCNIdleState = TIM_OCNIDLESTATE_RESET;
-  if (HAL_TIM_PWM_ConfigChannel(&htim1, &sConfigOC, TIM_CHANNEL_3) != HAL_OK)
+  sConfigOC.OCFastMode = TIM_OCFAST_ENABLE;
+  if (HAL_TIM_PWM_ConfigChannel(&htim2, &sConfigOC, TIM_CHANNEL_1) != HAL_OK)
   {
     _Error_Handler(__FILE__, __LINE__);
   }
 
-  if (HAL_TIM_PWM_ConfigChannel(&htim1, &sConfigOC, TIM_CHANNEL_4) != HAL_OK)
-  {
-    _Error_Handler(__FILE__, __LINE__);
-  }
-
-  sBreakDeadTimeConfig.OffStateRunMode = TIM_OSSR_DISABLE;
-  sBreakDeadTimeConfig.OffStateIDLEMode = TIM_OSSI_DISABLE;
-  sBreakDeadTimeConfig.LockLevel = TIM_LOCKLEVEL_OFF;
-  sBreakDeadTimeConfig.DeadTime = 0;
-  sBreakDeadTimeConfig.BreakState = TIM_BREAK_DISABLE;
-  sBreakDeadTimeConfig.BreakPolarity = TIM_BREAKPOLARITY_HIGH;
-  sBreakDeadTimeConfig.AutomaticOutput = TIM_AUTOMATICOUTPUT_DISABLE;
-  if (HAL_TIMEx_ConfigBreakDeadTime(&htim1, &sBreakDeadTimeConfig) != HAL_OK)
-  {
-    _Error_Handler(__FILE__, __LINE__);
-  }
-
-  HAL_TIM_MspPostInit(&htim1);
+  HAL_TIM_MspPostInit(&htim2);
 
 }
 
@@ -444,66 +464,112 @@ static void MX_GPIO_Init(void)
 /* USER CODE BEGIN 4 */
 
 void UltrasonicTaskFunction(void const * argument){
-	uint16_t US_time_acq [4][2];					//For every sensor we get two values, rising edge and falling
-	float US_distance [4];
+	uint16_t US_time_acq [4][2];							//For every sensor we get two values, rising edge and falling
+	float US_distance [4],US_min_dist;				//Array to hold distances in mm and minimum distance
+	uint32_t channel;													//For timer channel selection
+	HAL_TIM_IC_Init(&htim1);									//Activates timer 1, to begin acquiring sensor data
+	HAL_TIM_PWM_Init(&htim2);									//Activates timer 2, to begin generating pulses
+	HAL_TIM_PWM_Start_IT(&htim2,TIM_CHANNEL_1);
 	while(1){
-		for(int i=0; i<2; i++){
-			//First time for the odd ultrasonic sensors (OC1) and then for the ever ones (OC2)
-			//We use this conversion table for numbering: 
-			//	N=(OC,IC)	1=(1,1)	2=(2,1)	3=(1,2)	4=(2,2)
-			while((Ultrasonic_flags & (ULTRASONIC_CAPTURE_1 | ULTRASONIC_CAPTURE_2)) != (ULTRASONIC_CAPTURE_1 | ULTRASONIC_CAPTURE_2)){
-				if(xQueueReceive(Ultrasonic_Q1,&US_time_acq[i],portMAX_DELAY) == pdTRUE){
-					Ultrasonic_flags |= ULTRASONIC_CAPTURE_1;
+		//MX_TIM1_Init();													//Sets timer and all channel input captures to rising edge
+		for (uint8_t i=0; i<4 ; i++){
+			channel = i << 2;											//Selects the right timer channel
+			Ultrasonic_flags |= ULTRASONIC_SGNEDGE;	//Sets Scan Edge to rising
+			HAL_TIM_IC_Start_IT(&htim1,channel);	//Starts interruptions for input capture
+			if(xQueueReceive(Ultrasonic_Queue[i],&US_time_acq[i][0],25/portTICK_PERIOD_MS) == pdTRUE){
+				if((Ultrasonic_flags & ULTRASONIC_SGNEDGE) != 0){
+					HAL_TIM_IC_Stop_IT(&htim1,channel);
+					continue;
 				}
-				if(xQueueReceive(Ultrasonic_Q2,&US_time_acq[i+2],portMAX_DELAY) == pdTRUE){
-					Ultrasonic_flags |= ULTRASONIC_CAPTURE_2;
-				}
+				if(xQueueReceive(Ultrasonic_Queue[i],&US_time_acq[i][1],25/portTICK_PERIOD_MS) == pdTRUE)
+					Ultrasonic_flags |= (ULTRASONIC_CAPTURE_1 << i);
 			}
-			Ultrasonic_flags &= ~(ULTRASONIC_CAPTURE_1 | ULTRASONIC_CAPTURE_2);
-		}
-		for(int i=0; i<4; i++){
+			HAL_TIM_IC_Stop_IT(&htim1,channel);
+		}																														//After all data acquire, begin treatment
+		US_min_dist = FLT_MAX;
+		for(int i=0; i<4; i++){																			//
+			if((Ultrasonic_flags & (ULTRASONIC_CAPTURE_1 << i)) == 0){	//Checks if sensor has been measured
+				US_distance[i] = 0;																				//If not, set distance to 0
+				continue;
+			}
 			if(US_time_acq[i][0] < US_time_acq[i][1])
-				US_time_acq[i][1] -= US_time_acq[i][0];
+				US_time_acq[i][1] = US_time_acq[i][1] - US_time_acq[i][0];
 			else
 				US_time_acq[i][1] = 0xFFFF - US_time_acq[i][0] + US_time_acq[i][1];
-			US_distance[i] = 1000*US_time_acq[i][1]*340/2;					//Each timer tick is one microsecond -> distance in mm 
+			US_distance[i] = US_time_acq[i][1]*(float)340/(float)(2*1000);					//Each timer tick should be one microsecond -> distance in mm 
+			if(US_min_dist > US_distance[i])
+				US_min_dist = US_distance[i];													//Gets minimum distance
+			if(US_distance[i] < ULTRASONIC_T_ZERO && US_distance[i] != 0){
+				Ultrasonic_flags |= ULTRASONIC_WARNING;		//Sets hit collision avoidance state
+				//SEND WARNING (could be just the flag)
+			}
+			if(US_distance[i] < ULTRASONIC_T_MINUS && US_distance[i] != 0){
+				Ultrasonic_flags |= ULTRASONIC_DEAD;				//Sets dead state
+			}
+		}
+		Ultrasonic_flags &= ~(ULTRASONIC_CAPTURE_1 | ULTRASONIC_CAPTURE_2 | ULTRASONIC_CAPTURE_3 | ULTRASONIC_CAPTURE_4);
+		if(US_min_dist > ULTRASONIC_T_ZERO && US_min_dist < ULTRASONIC_T_PLUS){
+			Ultrasonic_flags &= ~ULTRASONIC_DEAD;
+			Ultrasonic_flags |= ULTRASONIC_WARNING;
+		}
+		else if(US_min_dist > ULTRASONIC_T_PLUS){
+			Ultrasonic_flags &= ~ULTRASONIC_DEAD;
+			Ultrasonic_flags &= ~ULTRASONIC_WARNING;
 		}
 	}
 }
 
-static void TIM1_To_IC(void)
-{
 
-  TIM_MasterConfigTypeDef sMasterConfig;
-  TIM_IC_InitTypeDef sConfigIC;
+void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim){
+	// - For TIMER 1 - //
+	if(htim == &htim1){																			
+		uint32_t time_aux;
+		uint8_t i = 0;
+		switch(htim->Channel){
+			case HAL_TIM_ACTIVE_CHANNEL_1:
+				i = 0;
+				time_aux = htim->Instance->CCR1;
+				break;
+			case HAL_TIM_ACTIVE_CHANNEL_2:
+				i = 1;
+				time_aux = htim->Instance->CCR2;
+				break;
+			case HAL_TIM_ACTIVE_CHANNEL_3:
+				i = 2;
+				time_aux = htim->Instance->CCR3;
+				break;
+			case HAL_TIM_ACTIVE_CHANNEL_4:
+				i = 3;
+				time_aux = htim->Instance->CCR4;
+				break;
+			default:
+				break;
+		}
+		if(i > 3)																		//If not, then
+			_Error_Handler(__FILE__, __LINE__);				//We have a pretty big problem
+		xQueueSendFromISR(Ultrasonic_Queue[i],&time_aux,NULL);
+		if((Ultrasonic_flags & ULTRASONIC_SGNEDGE) == 0)
+			Ultrasonic_flags |= ULTRASONIC_SGNEDGE;
+		else
+			Ultrasonic_flags &= ~ULTRASONIC_SGNEDGE;
+	}
+}
 
-  htim1.Instance = TIM1;
-  htim1.Init.Prescaler = 0;
-  htim1.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim1.Init.Period = 0;
-  htim1.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
-  htim1.Init.RepetitionCounter = 0;
-  if (HAL_TIM_IC_Init(&htim1) != HAL_OK)
-  {
-    _Error_Handler(__FILE__, __LINE__);
-  }
-
-  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
-  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
-  if (HAL_TIMEx_MasterConfigSynchronization(&htim1, &sMasterConfig) != HAL_OK)
-  {
-    _Error_Handler(__FILE__, __LINE__);
-  }
-
-  sConfigIC.ICPolarity = TIM_INPUTCHANNELPOLARITY_RISING;
-  sConfigIC.ICSelection = TIM_ICSELECTION_DIRECTTI;
-  sConfigIC.ICPrescaler = TIM_ICPSC_DIV1;
-  sConfigIC.ICFilter = 0;
-  if (HAL_TIM_IC_ConfigChannel(&htim1, &sConfigIC, TIM_CHANNEL_1) != HAL_OK)
-  {
-    _Error_Handler(__FILE__, __LINE__);
-  }
-
+void HAL_TIM_PWM_PulseFinishedCallback(TIM_HandleTypeDef *htim){
+//	TIM_OC_InitTypeDef sConfigOC;
+//	if(htim == &htim1){
+//		if((Ultrasonic_flags & ULTRASONIC_TRIGSEL) == 0U){					//If in MODE 0
+//			htim1.Instance->CCMR2 |= TIM_OCMODE_FORCED_INACTIVE;			//Takes CH3 to the forced inactive mode
+//			htim1.Instance->CCMR2 |= (TIM_OCMODE_PWM1 << 8U);					//Takes CH4 to the PWM 1 mode
+//			Ultrasonic_flags |= ULTRASONIC_TRIGSEL;										//Changes flag configuration, meaning that CH2 will now generate pulse
+//		}
+//		else if((Ultrasonic_flags & ULTRASONIC_TRIGSEL) != 0U){					//If in MODE 1
+//			htim1.Instance->CCMR2 |= TIM_OCMODE_PWM1;									//Takes CH3 to PWM 1 mode
+//			htim1.Instance->CCMR2 |= (TIM_OCMODE_FORCED_INACTIVE << 8U);	//Takes CH4 to forced inactive mode
+//			Ultrasonic_flags &= ~ULTRASONIC_TRIGSEL;									//Changes flag configuration, meaning that CH1 will now generate pulse
+//			xSemaphoreGiveFromISR(Ultrasonic_ISR_BS,NULL);						//Gives back semaphore to indicate end of cycle
+//		}
+//	}
 }
 /* USER CODE END 4 */
 
@@ -522,7 +588,7 @@ void StartDefaultTask(void const * argument)
 
 /**
   * @brief  Period elapsed callback in non blocking mode
-  * @note   This function is called  when TIM11 interrupt took place, inside
+  * @note   This function is called  when TIM5 interrupt took place, inside
   * HAL_TIM_IRQHandler(). It makes a direct call to HAL_IncTick() to increment
   * a global variable "uwTick" used as application time base.
   * @param  htim : TIM handle
@@ -531,9 +597,9 @@ void StartDefaultTask(void const * argument)
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
 /* USER CODE BEGIN Callback 0 */
-
+	
 /* USER CODE END Callback 0 */
-  if (htim->Instance == TIM11) {
+  if (htim->Instance == TIM5) {
     HAL_IncTick();
   }
 /* USER CODE BEGIN Callback 1 */

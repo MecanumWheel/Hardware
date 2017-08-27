@@ -57,13 +57,21 @@
 /* Private define ------------------------------------------------------------*/
 
 /* USER CODE BEGIN Private defines */
-#define ULTRASONIC_TRIGSEL				0x01
-#define ULTRASONIC_CAPTURE_1			0x02
-#define ULTRASONIC_CAPTURE_2			0x04
-#define ULTRASONIC_SGNEDGE_1			0x08
-#define ULTRASONIC_SGNEDGE_2			0x10
 
-
+// - Ultrasonic defines - //
+//Flags of the Ultrasonic status byte:
+#define ULTRASONIC_TRIGSEL				0x01			//
+#define ULTRASONIC_CAPTURE_1			0x02			//Flag to record sensor 1 data capture 
+#define ULTRASONIC_CAPTURE_2			0x04			//Flag to record sensor 2 data capture
+#define ULTRASONIC_CAPTURE_3			0x08			//Flag to record sensor 3 data capture
+#define ULTRASONIC_CAPTURE_4			0x10			//Flag to record sensor 4 data capture
+#define ULTRASONIC_SGNEDGE				0x20			//Flag for detection of interruption trigger scan edge
+#define ULTRASONIC_WARNING				0x40			//Flag of hit collision state active
+#define ULTRASONIC_DEAD						0x80			//Flag of dead collision state active			
+//Important Distances:
+#define ULTRASONIC_T_ZERO					100				//Base distance for collision avoidance (in mm)
+#define ULTRASONIC_T_PLUS					80				//Distance of maximal object aproach
+#define ULTRASONIC_T_MINUS				120				//Distance for releasing hit collision state 
 /* USER CODE END Private defines */
 
 void _Error_Handler(char *, int);

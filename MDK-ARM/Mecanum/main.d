@@ -22,13 +22,17 @@ mecanum\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h
 mecanum\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h
 mecanum\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h
 mecanum\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h
+mecanum\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h
+mecanum\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h
 mecanum\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h
 mecanum\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h
 mecanum\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h
 mecanum\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h
 mecanum\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h
+mecanum\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h
 mecanum\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h
 mecanum\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h
+mecanum\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
 mecanum\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.h
 mecanum\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h
 mecanum\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
@@ -44,3 +48,4 @@ mecanum\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/timers.h
 mecanum\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h
 mecanum\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/semphr.h
 mecanum\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/event_groups.h
+mecanum\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\float.h
