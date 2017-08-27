@@ -27,7 +27,15 @@ Project File Date:  08/27/2017
 <h2>Output:</h2>
 *** Using Compiler 'V5.06 update 3 (build 300)', folder: 'C:\Keil_v5\ARM\ARMCC\Bin'
 Build target 'prj'
-"prj\prj.axf" - 0 Error(s), 0 Warning(s).
+compiling main.c...
+../Src/main.c(334): error:  #20: identifier "uint_8" is undefined
+  			GeneratePackage(package, 128, (uint_8)motorDirection
+../Src/main.c(334): error:  #165: too few arguments in function call
+  			GeneratePackage(package, 128, (uint_8)motorDirection
+../Src/main.c(334): error:  #18: expected a ")"
+  			GeneratePackage(package, 128, (uint_8)motorDirection
+../Src/main.c: 0 warnings, 3 errors
+"prj\prj.axf" - 3 Error(s), 0 Warning(s).
 
 <h2>Software Packages used:</h2>
 
@@ -45,7 +53,8 @@ Package Vendor: ARM
 <h2>Collection of Component Files used:</h2>
 
    * Component: ARM::CMSIS:CORE:5.0.2
-Build Time Elapsed:  00:00:01
+Target not created.
+Build Time Elapsed:  00:00:02
 </pre>
 </body>
 </html>

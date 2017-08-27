@@ -296,6 +296,47 @@ const uint8_t START_SPEED = 0x00;
 const uint8_t DELTA_SPEED = 1;
 const uint8_t MAX_SPEED = 0x7F;
 
+typedef enum
+{
+  Forward = 0,
+  Backward = 1
+} MotorDirection;
+
+typedef enum
+{
+  FrontLeft,
+  FrontRight,
+	BackLeft,
+	BackRight
+} MotorPosition;
+
+
+const uint8_t PACKAGE_SIZE = 5;
+void GeneratePackage(uint8_t* package, uint8_t address, uint8_t cmd, uint8_t value)
+{
+	package[0] = address;
+	package[1] = cmd;
+	package[2] = value;
+	
+	uint16_t crc = crc16(package, 3);
+	package[3] = 0xFF & (crc >> 8);
+	package[4] = 0xFF & (crc);
+}
+
+void MoveMotor(MotorPosition motorPosition, MotorDirection motorDirection, uint8_t speed)
+{
+	uint8_t package[SIZE];
+		
+	switch(motorPosition)
+	{
+		case FrontLeft:
+		case FrontRight:
+			GeneratePackage(package, 128, (uint_8)motorDirection
+			break;
+			
+	}
+}
+
 /* USER CODE END 4 */
 
 /* StartMotorControl function */
