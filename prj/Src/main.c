@@ -335,8 +335,8 @@ void StartMotorControl(void const * argument)
   /* USER CODE BEGIN 5 */
   /* Infinite loop */
 	uint8_t message[size];
-	message[0] = 128;
-	message[1] = 0;
+	message[0] = addres;
+	message[1] = cmd;
 	
 	uint8_t deltaSpeed = DELTA_SPEED;
 	uint8_t speed = startSpeed;
