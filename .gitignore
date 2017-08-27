@@ -2,3 +2,5 @@
 *.crf
 *.d
 *.o
+*.htm
+*.dep

@@ -324,7 +324,7 @@ const uint8_t size = 5;
 const uint8_t addres = 128;
 const uint8_t cmd = 0;
 const uint8_t startSpeed = 0;
-const uint8_t DELTA_SPEED = 0x7F;
+const uint8_t DELTA_SPEED = 1;
 const uint8_t maxSpeed = 0x7F;
 
 /* USER CODE END 4 */
@@ -359,7 +359,7 @@ void StartMotorControl(void const * argument)
 		
 		HAL_UART_Transmit(&huart3, message, size, 500);
 		
-		osDelay(1000);
+		osDelay(400);
   }
 	//rgknergelursekrshgergergei
   /* USER CODE END 5 */ 
