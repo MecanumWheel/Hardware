@@ -55,8 +55,6 @@
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
-CRC_HandleTypeDef hcrc;
-
 UART_HandleTypeDef huart3;
 
 osThreadId motorControlHandle;
@@ -71,7 +69,6 @@ osThreadId mainTaskHandle;
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_USART3_UART_Init(void);
-static void MX_CRC_Init(void);
 void StartMotorControl(void const * argument);
 void StartMainTask(void const * argument);
 
@@ -110,7 +107,6 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_USART3_UART_Init();
-  MX_CRC_Init();
 
   /* USER CODE BEGIN 2 */
 
@@ -208,23 +204,6 @@ void SystemClock_Config(void)
   HAL_NVIC_SetPriority(SysTick_IRQn, 3, 0);
 }
 
-/* CRC init function */
-static void MX_CRC_Init(void)
-{
-
-  hcrc.Instance = CRC;
-  hcrc.Init.DefaultPolynomialUse = DEFAULT_POLYNOMIAL_ENABLE;
-  hcrc.Init.DefaultInitValueUse = DEFAULT_INIT_VALUE_ENABLE;
-  hcrc.Init.InputDataInversionMode = CRC_INPUTDATA_INVERSION_NONE;
-  hcrc.Init.OutputDataInversionMode = CRC_OUTPUTDATA_INVERSION_DISABLE;
-  hcrc.InputDataFormat = CRC_INPUTDATA_FORMAT_BYTES;
-  if (HAL_CRC_Init(&hcrc) != HAL_OK)
-  {
-    _Error_Handler(__FILE__, __LINE__);
-  }
-
-}
-
 /* USART3 init function */
 static void MX_USART3_UART_Init(void)
 {
@@ -320,26 +299,27 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 
 }
 
-const uint8_t size = 5;
-const uint8_t addres = 128;
-const uint8_t cmd = 0;
-const uint8_t startSpeed = 0;
+const uint8_t SIZE = 1;
+const uint8_t ADDRES = 128;
+const uint8_t CMD = 0;
+const uint8_t START_SPEED = 64;
 const uint8_t DELTA_SPEED = 1;
-const uint8_t maxSpeed = 0x7F;
+const uint8_t MAX_SPEED = 64;
 
 /* USER CODE END 4 */
 
 /* StartMotorControl function */
 void StartMotorControl(void const * argument)
 {
+
   /* USER CODE BEGIN 5 */
   /* Infinite loop */
-	uint8_t message[size];
-	message[0] = addres;
-	message[1] = cmd;
+	uint8_t message[SIZE];
+	message[0] = ADDRES;
+//	message[1] = CMD;
 	
 	uint8_t deltaSpeed = DELTA_SPEED;
-	uint8_t speed = startSpeed;
+	uint8_t speed = START_SPEED;
 
 	for(;;)
   {
@@ -350,14 +330,14 @@ void StartMotorControl(void const * argument)
 		if (speed == 0)
 			deltaSpeed = deltaSpeed;
 		
-		if (speed == maxSpeed)
+		if (speed == MAX_SPEED)
 			deltaSpeed = -deltaSpeed;
 		
-		speed &= maxSpeed;
-		message[2] = speed;
-		CalcCRC(message);
+		speed &= MAX_SPEED;
+		message[0] = speed;
+		//CalcCRC(message);
 		
-		HAL_UART_Transmit(&huart3, message, size, 500);
+		HAL_UART_Transmit(&huart3, message, SIZE, 500);
 		
 		osDelay(400);
   }
