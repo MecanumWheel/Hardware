@@ -299,12 +299,12 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 
 }
 
-const uint8_t SIZE = 1;
+const uint8_t SIZE = 5;
 const uint8_t ADDRES = 128;
 const uint8_t CMD = 0;
-const uint8_t START_SPEED = 64;
+const uint8_t START_SPEED = 0x3F;
 const uint8_t DELTA_SPEED = 1;
-const uint8_t MAX_SPEED = 64;
+const uint8_t MAX_SPEED = 0x3F;
 
 /* USER CODE END 4 */
 
@@ -316,7 +316,7 @@ void StartMotorControl(void const * argument)
   /* Infinite loop */
 	uint8_t message[SIZE];
 	message[0] = ADDRES;
-//	message[1] = CMD;
+	message[1] = CMD;
 	
 	uint8_t deltaSpeed = DELTA_SPEED;
 	uint8_t speed = START_SPEED;
@@ -325,21 +325,27 @@ void StartMotorControl(void const * argument)
   {
     HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_6);
 		
-		speed += deltaSpeed;
-		
 		if (speed == 0)
+		{
 			deltaSpeed = deltaSpeed;
+			HAL_GPIO_WritePin(GPIOC, GPIO_PIN_6, GPIO_PIN_SET);
+		}
 		
 		if (speed == MAX_SPEED)
+		{
 			deltaSpeed = -deltaSpeed;
+			HAL_GPIO_WritePin(GPIOC, GPIO_PIN_6, GPIO_PIN_RESET);
+		}
 		
 		speed &= MAX_SPEED;
-		message[0] = speed;
-		//CalcCRC(message);
+		message[2] = speed;
+		CalcCRC(message);
 		
 		HAL_UART_Transmit(&huart3, message, SIZE, 500);
 		
-		osDelay(400);
+		osDelay(200);
+		speed += deltaSpeed;
+
   }
 	//rgknergelursekrshgergergei
   /* USER CODE END 5 */ 
