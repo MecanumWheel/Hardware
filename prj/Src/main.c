@@ -55,6 +55,8 @@
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
+CRC_HandleTypeDef hcrc;
+
 UART_HandleTypeDef huart3;
 
 osThreadId motorControlHandle;
@@ -69,6 +71,7 @@ osThreadId mainTaskHandle;
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_USART3_UART_Init(void);
+static void MX_CRC_Init(void);
 void StartMotorControl(void const * argument);
 void StartMainTask(void const * argument);
 
@@ -107,6 +110,7 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_USART3_UART_Init();
+  MX_CRC_Init();
 
   /* USER CODE BEGIN 2 */
 
@@ -204,6 +208,23 @@ void SystemClock_Config(void)
   HAL_NVIC_SetPriority(SysTick_IRQn, 3, 0);
 }
 
+/* CRC init function */
+static void MX_CRC_Init(void)
+{
+
+  hcrc.Instance = CRC;
+  hcrc.Init.DefaultPolynomialUse = DEFAULT_POLYNOMIAL_ENABLE;
+  hcrc.Init.DefaultInitValueUse = DEFAULT_INIT_VALUE_ENABLE;
+  hcrc.Init.InputDataInversionMode = CRC_INPUTDATA_INVERSION_NONE;
+  hcrc.Init.OutputDataInversionMode = CRC_OUTPUTDATA_INVERSION_DISABLE;
+  hcrc.InputDataFormat = CRC_INPUTDATA_FORMAT_BYTES;
+  if (HAL_CRC_Init(&hcrc) != HAL_OK)
+  {
+    _Error_Handler(__FILE__, __LINE__);
+  }
+
+}
+
 /* USART3 init function */
 static void MX_USART3_UART_Init(void)
 {
@@ -285,48 +306,62 @@ uint16_t gen_crc16(const uint8_t *data, uint16_t size)
 	}
 	return crc;
 }
-const uint8_t size = 5;
-uint8_t message[size];
-uint16_t crc;
 
-void CalcCRC()
+void CalcCRC(uint8_t* message)
 {
-	crc = gen_crc16(message, 3);
+	uint16_t crc = gen_crc16(message, 3);
 	message[3] = 0xFF & (crc);
 	message[4] = 0xFF & (crc >> 8);
 }
+
+
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+{
+
+}
+
+const uint8_t size = 5;
+const uint8_t addres = 128;
+const uint8_t cmd = 0;
+const uint8_t startSpeed = 0;
+const uint8_t DELTA_SPEED = 0x7F;
+const uint8_t maxSpeed = 0x7F;
+
 /* USER CODE END 4 */
 
 /* StartMotorControl function */
 void StartMotorControl(void const * argument)
 {
-
   /* USER CODE BEGIN 5 */
   /* Infinite loop */
+	uint8_t message[size];
 	message[0] = 128;
 	message[1] = 0;
+	
+	uint8_t deltaSpeed = DELTA_SPEED;
+	uint8_t speed = startSpeed;
 
-	uint8_t flag = 0;
-  for(;;)
+	for(;;)
   {
-    if (flag)
-		{
-			message[2] = 30;
-			HAL_GPIO_WritePin(GPIOC, GPIO_PIN_6, GPIO_PIN_RESET);
-		}
-		else
-		{
-			message[2] = 70;
-			HAL_GPIO_WritePin(GPIOC, GPIO_PIN_6, GPIO_PIN_SET);
-		}
-			
-		flag = ~flag;
-		CalcCRC();
+    HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_6);
+		
+		speed += deltaSpeed;
+		
+		if (speed == 0)
+			deltaSpeed = deltaSpeed;
+		
+		if (speed == maxSpeed)
+			deltaSpeed = -deltaSpeed;
+		
+		speed &= maxSpeed;
+		message[2] = speed;
+		CalcCRC(message);
 		
 		HAL_UART_Transmit(&huart3, message, size, 500);
 		
 		osDelay(1000);
   }
+	//rgknergelursekrshgergergei
   /* USER CODE END 5 */ 
 }
 

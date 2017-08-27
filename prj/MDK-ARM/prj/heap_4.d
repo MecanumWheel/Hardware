@@ -1,8 +1,8 @@
 prj\heap_4.o: ../Middlewares/Third_Party/FreeRTOS/Source/portable/MemMang/heap_4.c
-prj\heap_4.o: d:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
+prj\heap_4.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
 prj\heap_4.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h
-prj\heap_4.o: d:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
-prj\heap_4.o: d:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+prj\heap_4.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
+prj\heap_4.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 prj\heap_4.o: ../Inc/FreeRTOSConfig.h
 prj\heap_4.o: ../Inc/main.h
 prj\heap_4.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h

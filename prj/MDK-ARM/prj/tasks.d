@@ -1,9 +1,9 @@
 prj\tasks.o: ../Middlewares/Third_Party/FreeRTOS/Source/tasks.c
-prj\tasks.o: d:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
-prj\tasks.o: d:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+prj\tasks.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
+prj\tasks.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
 prj\tasks.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h
-prj\tasks.o: d:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
-prj\tasks.o: d:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+prj\tasks.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
+prj\tasks.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 prj\tasks.o: ../Inc/FreeRTOSConfig.h
 prj\tasks.o: ../Inc/main.h
 prj\tasks.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h

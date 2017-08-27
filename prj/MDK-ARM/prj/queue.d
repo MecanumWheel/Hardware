@@ -1,9 +1,9 @@
 prj\queue.o: ../Middlewares/Third_Party/FreeRTOS/Source/queue.c
-prj\queue.o: d:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
-prj\queue.o: d:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+prj\queue.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
+prj\queue.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
 prj\queue.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h
-prj\queue.o: d:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
-prj\queue.o: d:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+prj\queue.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
+prj\queue.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 prj\queue.o: ../Inc/FreeRTOSConfig.h
 prj\queue.o: ../Inc/main.h
 prj\queue.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h

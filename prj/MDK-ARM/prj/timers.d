@@ -1,8 +1,8 @@
 prj\timers.o: ../Middlewares/Third_Party/FreeRTOS/Source/timers.c
-prj\timers.o: d:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
+prj\timers.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
 prj\timers.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h
-prj\timers.o: d:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
-prj\timers.o: d:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+prj\timers.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
+prj\timers.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 prj\timers.o: ../Inc/FreeRTOSConfig.h
 prj\timers.o: ../Inc/main.h
 prj\timers.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h

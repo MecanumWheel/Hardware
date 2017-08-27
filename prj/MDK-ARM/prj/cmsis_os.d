@@ -1,9 +1,9 @@
 prj\cmsis_os.o: ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.c
-prj\cmsis_os.o: d:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+prj\cmsis_os.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
 prj\cmsis_os.o: ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.h
 prj\cmsis_os.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h
-prj\cmsis_os.o: d:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
-prj\cmsis_os.o: d:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+prj\cmsis_os.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
+prj\cmsis_os.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 prj\cmsis_os.o: ../Inc/FreeRTOSConfig.h
 prj\cmsis_os.o: ../Inc/main.h
 prj\cmsis_os.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h

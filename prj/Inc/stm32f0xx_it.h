@@ -48,6 +48,7 @@
 void NMI_Handler(void);
 void HardFault_Handler(void);
 void SysTick_Handler(void);
+void USART3_4_IRQHandler(void);
 
 #ifdef __cplusplus
 }
