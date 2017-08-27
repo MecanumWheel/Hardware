@@ -57,7 +57,8 @@
 /* Private variables ---------------------------------------------------------*/
 UART_HandleTypeDef huart3;
 
-osThreadId defaultTaskHandle;
+osThreadId motorControlHandle;
+osThreadId mainTaskHandle;
 
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
@@ -68,7 +69,8 @@ osThreadId defaultTaskHandle;
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_USART3_UART_Init(void);
-void StartDefaultTask(void const * argument);
+void StartMotorControl(void const * argument);
+void StartMainTask(void const * argument);
 
 /* USER CODE BEGIN PFP */
 /* Private function prototypes -----------------------------------------------*/
@@ -123,9 +125,13 @@ int main(void)
   /* USER CODE END RTOS_TIMERS */
 
   /* Create the thread(s) */
-  /* definition and creation of defaultTask */
-  osThreadDef(defaultTask, StartDefaultTask, osPriorityNormal, 0, 128);
-  defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
+  /* definition and creation of motorControl */
+  osThreadDef(motorControl, StartMotorControl, osPriorityNormal, 0, 128);
+  motorControlHandle = osThreadCreate(osThread(motorControl), NULL);
+
+  /* definition and creation of mainTask */
+  osThreadDef(mainTask, StartMainTask, osPriorityIdle, 0, 128);
+  mainTaskHandle = osThreadCreate(osThread(mainTask), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -203,7 +209,7 @@ static void MX_USART3_UART_Init(void)
 {
 
   huart3.Instance = USART3;
-  huart3.Init.BaudRate = 115200;
+  huart3.Init.BaudRate = 9600;
   huart3.Init.WordLength = UART_WORDLENGTH_8B;
   huart3.Init.StopBits = UART_STOPBITS_1;
   huart3.Init.Parity = UART_PARITY_NONE;
@@ -260,18 +266,24 @@ static void MX_GPIO_Init(void)
 
 uint16_t gen_crc16(const uint8_t *data, uint16_t size)
 {
-		uint16_t crc;
-    for (int byte = 0; byte < size; byte++) {
+	uint16_t crc;
+	for (int byte = 0; byte < size; byte++) 
+	{
 		crc = crc ^ ((unsigned int)data[byte] << 8);
-		for (uint8_t bit = 0; bit < 8; bit++) {
-		if (crc & 0x8000) {
-		crc = (crc << 1) ^ 0x1021;
-		} else {
-		crc = crc << 1;
+		
+		for (uint8_t bit = 0; bit < 8; bit++) 
+		{
+			if (crc & 0x8000)
+			{
+				crc = (crc << 1) ^ 0x1021;
+			} 
+			else
+			{
+				crc = crc << 1;
+			}
 		}
-		}
-		}
-		return crc;
+	}
+	return crc;
 }
 const uint8_t size = 5;
 uint8_t message[size];
@@ -280,13 +292,13 @@ uint16_t crc;
 void CalcCRC()
 {
 	crc = gen_crc16(message, 3);
-	message[3] = 0xFF & (crc >> 8);
-	message[4] = 0xFF & crc;
+	message[3] = 0xFF & (crc);
+	message[4] = 0xFF & (crc >> 8);
 }
 /* USER CODE END 4 */
 
-/* StartDefaultTask function */
-void StartDefaultTask(void const * argument)
+/* StartMotorControl function */
+void StartMotorControl(void const * argument)
 {
 
   /* USER CODE BEGIN 5 */
@@ -316,6 +328,18 @@ void StartDefaultTask(void const * argument)
 		osDelay(1000);
   }
   /* USER CODE END 5 */ 
+}
+
+/* StartMainTask function */
+void StartMainTask(void const * argument)
+{
+  /* USER CODE BEGIN StartMainTask */
+  /* Infinite loop */
+  for(;;)
+  {
+    osDelay(1);
+  }
+  /* USER CODE END StartMainTask */
 }
 
 /**

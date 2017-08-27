@@ -1,6 +1,7 @@
 #MicroXplorer Configuration settings - do not modify
-FREERTOS.IPParameters=Tasks01
-FREERTOS.Tasks01=defaultTask,0,128,StartDefaultTask,Default,NULL
+FREERTOS.FootprintOK=true
+FREERTOS.IPParameters=Tasks01,FootprintOK
+FREERTOS.Tasks01=motorControl,0,128,StartMotorControl,Default,NULL,Dynamic,NULL,NULL;mainTask,-3,128,StartMainTask,Default,NULL,Dynamic,NULL,NULL
 File.Version=6
 KeepUserPlacement=false
 Mcu.Family=STM32F0
@@ -79,7 +80,7 @@ RCC.PLLCLKFreq_Value=16000000
 RCC.PLLMCOFreq_Value=16000000
 RCC.TimSysFreq_Value=8000000
 RCC.VCOOutput2Freq_Value=8000000
-USART3.BaudRate=115200
+USART3.BaudRate=9600
 USART3.IPParameters=VirtualMode-Asynchronous,BaudRate,WordLength
 USART3.VirtualMode-Asynchronous=VM_ASYNC
 USART3.WordLength=WORDLENGTH_8B
