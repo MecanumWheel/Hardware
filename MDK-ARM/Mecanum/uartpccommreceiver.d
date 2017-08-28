@@ -17,6 +17,7 @@ mecanum\uartpccommreceiver.o: ../Middlewares/Third_Party/FreeRTOS/Source/include
 mecanum\uartpccommreceiver.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h
 mecanum\uartpccommreceiver.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/semphr.h
 mecanum\uartpccommreceiver.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/event_groups.h
+mecanum\uartpccommreceiver.o: ../Inc/motor.h
 mecanum\uartpccommreceiver.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h
 mecanum\uartpccommreceiver.o: ../Inc/stm32f4xx_hal_conf.h
 mecanum\uartpccommreceiver.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h

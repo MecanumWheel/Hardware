@@ -47,3 +47,4 @@ mecanum\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/semphr.h
 mecanum\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/event_groups.h
 mecanum\main.o: ../Inc/UartPcCommReceiver.h
 mecanum\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.h
+mecanum\main.o: ../Inc/motor.h

@@ -51,7 +51,8 @@
 #include "cmsis_os.h"
 
 /* USER CODE BEGIN Includes */
-//
+#include "UartPcCommReceiver.h"
+#include "motor.h"
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
@@ -66,8 +67,8 @@ DMA_HandleTypeDef hdma_usart2_tx;
 osThreadId defaultTaskHandle;
 
 /* USER CODE BEGIN PV */
-/* Private variables ---------------------------------------------------------*/
-
+osThreadId motorControlHandle;
+xQueueHandle motorQueue;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -80,12 +81,12 @@ static void MX_USART6_UART_Init(void);
 void StartDefaultTask(void const * argument);
 
 /* USER CODE BEGIN PFP */
-/* Private function prototypes -----------------------------------------------*/
+void StartMotorControl(void const * argument);
 
 /* USER CODE END PFP */
 
 /* USER CODE BEGIN 0 */
-#include "UartPcCommReceiver.h"
+
 /* USER CODE END 0 */
 
 int main(void)
@@ -139,13 +140,16 @@ int main(void)
   osThreadDef(defaultTask, StartDefaultTask, osPriorityNormal, 0, 128);
   defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
 
+  osThreadDef(motorControl, StartMotorControl, osPriorityNormal, 0, 128);
+  motorControlHandle = osThreadCreate(osThread(motorControl), NULL);
+
   /* USER CODE BEGIN RTOS_THREADS */
-  osThreadDef(pcComm, StartUartPcCommReceiver, osPriorityNormal, 0, 2048);
+  osThreadDef(pcComm, UartPcCommReceiverFunc, osPriorityNormal, 0, 2048);
   osThreadCreate(osThread(pcComm), NULL);
   /* USER CODE END RTOS_THREADS */
 
   /* USER CODE BEGIN RTOS_QUEUES */
-  /* add queues, ... */
+  motorQueue = xQueueCreate( 1, sizeof( FullMotorPackage ) );
   /* USER CODE END RTOS_QUEUES */
  
 
@@ -340,7 +344,20 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
-
+void StartMotorControl(void const * argument)
+{	
+  uint8_t buffer[sizeof( FullMotorPackage )];
+  FullMotorPackage *fullMotorPackage;
+  for(;;)
+  {
+    xQueueReceive( motorQueue, &( buffer ), portMAX_DELAY ); 
+	fullMotorPackage = (FullMotorPackage*)buffer;
+	MoveMotor(FrontLeft, fullMotorPackage->FrontLeft);
+	MoveMotor(FrontRight, fullMotorPackage->FrontRight);
+    MoveMotor(BackLeft, fullMotorPackage->BackLeft);
+	MoveMotor(BackRight, fullMotorPackage->BackRight);
+  }
+}
 /* USER CODE END 4 */
 
 /* StartDefaultTask function */

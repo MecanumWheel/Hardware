@@ -1,3 +1,3 @@
 #pragma once
 
-void StartUartPcCommReceiver(void const * argument);
+void UartPcCommReceiverFunc(void const * argument);

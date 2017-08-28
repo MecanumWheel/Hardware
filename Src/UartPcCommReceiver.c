@@ -111,6 +111,7 @@ void UartPcCommReceiverFunc(void const * argument)
 #elif (JS_OPT == 2)
 
 #include "UartPcCommReceiver.h"
+#include "motor.h"
 
 #include <stm32f4xx_hal.h>
 
@@ -125,11 +126,7 @@ void UartPcCommReceiverFunc(void const * argument)
 #define CANCEL_IF(arg) if (arg){jsonRxBufferUsed[!jsonCurrentRxBuffer] = 0; jsonJsonBufferState = JSON_BUF_PROCESSED; continue;}
 
 extern UART_HandleTypeDef huart1;
-
-typedef struct
-{
-    uint8_t fr, fl, bl, br;
-} MotorCmd;
+extern xQueueHandle motorQueue;
 
 enum JsonBufferState
 {
@@ -169,17 +166,19 @@ static void handleIncomingByte(uint8_t byte)
 static void processMotorsRequest(json_t *root)
 {
     HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_15);
-    static MotorCmd motorCmd;
+    static FullMotorPackage motorCmd;
     json_t *valuesArr = json_object_get(root, valueKeyStr);
     if (!json_is_array(valuesArr))
         return;
     for (int i = 0; i < json_array_size(valuesArr); i++)
     {
         json_t *el = json_array_get(valuesArr, i);
-        ((uint8_t*)&motorCmd)[i] = json_integer_value(el);
-        // TODO: push to queue
-        // TODO: memory management and number of commands to store
+        int8_t dir = json_integer_value(el);
+        SingleMotor *ptrs[4] = {&(motorCmd.FrontRight), &motorCmd.FrontLeft, &motorCmd.BackLeft, &motorCmd.BackRight};
+        ptrs[i]->direction = dir > 0 ? Forward : Backward;
+        ptrs[i]->speed = dir > 0 ? dir : -dir;
     }
+    xQueueSend(motorQueue, (void*)(&motorCmd), 0);
 }
 
 static void processEventAckRequest(json_t *root)
@@ -198,7 +197,7 @@ void Uart2CpltHandler(void)
     handleIncomingByte(dmaRxBuffer[1]);
 }
 
-void StartUartPcCommReceiver(void const * argument)
+void UartPcCommReceiverFunc(void const * argument)
 {
     // Setup
     HAL_UART_Receive_DMA(&huart1, dmaRxBuffer, sizeof(dmaRxBuffer));
