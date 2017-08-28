@@ -38,7 +38,6 @@ volatile uint8_t jsonRxBufferState = JSON_BUF_PROCESSED;
 
 static void handleIncomingByte(uint8_t byte)
 {
-    //HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
     if (jsonRxBufferState == JSON_BUF_PROCESSED && byte != '{' 
         || jsonRxBufferState == JSON_BUF_PROCESSING 
         || jsonRxBufferState == JSON_BUF_RECEIVED)
@@ -66,7 +65,6 @@ static void processMotorsRequest(json_t *root)
 
 static void processEventAckRequest(json_t *root)
 {
-    HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_14);
     HAL_UART_Transmit_DMA(&huart1, jsonRxBuffer, jsonRxBufferUsed);
 }
 
@@ -90,7 +88,6 @@ void UartPcCommReceiverFunc(void const * argument)
     {
         if (jsonRxBufferState != JSON_BUF_RECEIVED)
             continue;
-        HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
         jsonRxBufferState = JSON_BUF_PROCESSING;
         json_t *obj = json_loadb((const char *)jsonRxBuffer, jsonRxBufferUsed, 0, 0);
         CANCEL_IF(!obj);
@@ -104,7 +101,6 @@ void UartPcCommReceiverFunc(void const * argument)
         json_decref(obj);
         jsonRxBufferUsed = 0;
         jsonRxBufferState = JSON_BUF_PROCESSED;
-        HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_1);
     }
 }
 
@@ -151,7 +147,6 @@ static volatile uint8_t jsonJsonBufferState = JSON_BUF_PROCESSED;
 
 static void handleIncomingByte(uint8_t byte)
 {
-    //HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
     if (jsonRxBufferState == JSON_BUF_WAITING_DATA && byte != '{'
         || jsonRxBufferState == JSON_BUF_RECEIVED)
         return;
@@ -165,7 +160,6 @@ static void handleIncomingByte(uint8_t byte)
 
 static void processMotorsRequest(json_t *root)
 {
-    HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_15);
     static FullMotorPackage motorCmd;
     json_t *valuesArr = json_object_get(root, valueKeyStr);
     if (!json_is_array(valuesArr))
@@ -183,7 +177,6 @@ static void processMotorsRequest(json_t *root)
 
 static void processEventAckRequest(json_t *root)
 {
-    HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_14);
     HAL_UART_Transmit_DMA(&huart1, jsonRxBuffer[!jsonCurrentRxBuffer], jsonRxBufferUsed[!jsonCurrentRxBuffer]);
 }
 
@@ -216,7 +209,6 @@ void UartPcCommReceiverFunc(void const * argument)
                 jsonRxBufferState = JSON_BUF_WAITING_DATA;
             }
         }
-        HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
         json_t *obj = json_loadb((const char *)(jsonRxBuffer[!jsonCurrentRxBuffer]),
                                  jsonRxBufferUsed[!jsonCurrentRxBuffer], 0, 0);
         CANCEL_IF(!obj);
@@ -230,7 +222,6 @@ void UartPcCommReceiverFunc(void const * argument)
         json_decref(obj);
         jsonRxBufferUsed[!jsonCurrentRxBuffer] = 0;
         jsonJsonBufferState = JSON_BUF_PROCESSED;
-        HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_1);
     }
 }
 

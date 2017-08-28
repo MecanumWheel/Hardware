@@ -19,8 +19,6 @@
 "mecanum\main.o"
 "mecanum\freertos.o"
 "mecanum\stm32f4xx_hal_timebase_tim.o"
-"mecanum\uartgps.o"
-"mecanum\json.o"
 "mecanum\uartpccommreceiver.o"
 "mecanum\motor.o"
 "mecanum\uartpccommtransmitter.o"

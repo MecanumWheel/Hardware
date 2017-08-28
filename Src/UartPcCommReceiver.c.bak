@@ -178,6 +178,7 @@ static void processMotorsRequest(json_t *root)
         ptrs[i]->direction = dir > 0 ? Forward : Backward;
         ptrs[i]->speed = dir > 0 ? dir : -dir;
     }
+    xQueueSend(motorQueue, (void*)(&motorCmd), 0);
 }
 
 static void processEventAckRequest(json_t *root)
