@@ -52,6 +52,11 @@
 
 /* USER CODE BEGIN Includes */
 #include "float.h"
+#include "Periph_BATT.h"
+#include "glcd.h"
+#include "glcd_graphics.h"
+#include "glcd_text.h"
+
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
@@ -71,14 +76,18 @@ osThreadId defaultTaskHandle;
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
 osThreadId UltrasonicTaskHandle;
+osThreadId BatteryControlTaskHandle;
+osThreadId IndicatorsTaskHandle;
 
 SemaphoreHandle_t Ultrasonic_ISR_BS;
 
 QueueHandle_t Ultrasonic_Queue[4];
+QueueHandle_t UltrasonicToPC;
 
 BaseType_t Ultrasonic_HPTW_Q1 = pdFALSE, Ultrasonic_HPTW_Q2 = pdFALSE;
 
 uint8_t Ultrasonic_flags = 0;
+uint8_t Battery_flags = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -99,6 +108,8 @@ void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
 /* USER CODE BEGIN PFP */
 /* Private function prototypes -----------------------------------------------*/
 void UltrasonicTaskFunction(void const * argument);
+void BatteryControlTaskFunction(void const * argument);
+void IndicatorsTaskFunction(void const * argument);
 
 /* USER CODE END PFP */
 
@@ -165,6 +176,10 @@ int main(void)
   /* USER CODE BEGIN RTOS_THREADS */
   osThreadDef(UltrasonicTask, UltrasonicTaskFunction, osPriorityNormal, 0, 128);
   UltrasonicTaskHandle = osThreadCreate(osThread(UltrasonicTask), NULL);
+	osThreadDef(BatteryControlTask, BatteryControlTaskFunction, osPriorityNormal, 0, 128);
+  BatteryControlTaskHandle = osThreadCreate(osThread(BatteryControlTask), NULL);
+	osThreadDef(IndicatorsTask, IndicatorsTaskFunction, osPriorityNormal, 0, 128);
+  IndicatorsTaskHandle = osThreadCreate(osThread(IndicatorsTask), NULL);
   /* USER CODE END RTOS_THREADS */
 
   /* USER CODE BEGIN RTOS_QUEUES */
@@ -172,6 +187,7 @@ int main(void)
 	Ultrasonic_Queue[1] = xQueueCreate(2, sizeof( uint32_t ) );
 	Ultrasonic_Queue[2] = xQueueCreate(2, sizeof( uint32_t ) );
 	Ultrasonic_Queue[3] = xQueueCreate(2, sizeof( uint32_t ) );
+	UltrasonicToPC = xQueueCreate(2, sizeof( struct Ultrasonic_Distances ) );
   /* USER CODE END RTOS_QUEUES */
  
 
@@ -388,6 +404,13 @@ static void MX_TIM2_Init(void)
     _Error_Handler(__FILE__, __LINE__);
   }
 
+  sConfigOC.Pulse = 12500;
+  sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
+  if (HAL_TIM_PWM_ConfigChannel(&htim2, &sConfigOC, TIM_CHANNEL_2) != HAL_OK)
+  {
+    _Error_Handler(__FILE__, __LINE__);
+  }
+
   HAL_TIM_MspPostInit(&htim2);
 
 }
@@ -466,6 +489,7 @@ static void MX_GPIO_Init(void)
 void UltrasonicTaskFunction(void const * argument){
 	uint16_t US_time_acq [4][2];							//For every sensor we get two values, rising edge and falling
 	float US_distance [4],US_min_dist;				//Array to hold distances in mm and minimum distance
+	struct Ultrasonic_Distances US_RxStruct;	//Struct to be sent to the PC, with distances
 	uint32_t channel;													//For timer channel selection
 	HAL_TIM_IC_Init(&htim1);									//Activates timer 1, to begin acquiring sensor data
 	HAL_TIM_PWM_Init(&htim2);									//Activates timer 2, to begin generating pulses
@@ -507,6 +531,14 @@ void UltrasonicTaskFunction(void const * argument){
 				Ultrasonic_flags |= ULTRASONIC_DEAD;				//Sets dead state
 			}
 		}
+		US_RxStruct.Front = US_distance[0];			//Assigns the distance to the right fields of the Struct to be sent to PC
+		US_RxStruct.Left = US_distance[1];			//We begin in the front and proceed counter-clockwise
+		US_RxStruct.Back = US_distance[2];
+		US_RxStruct.Right = US_distance[3];
+		if(xQueueSend(UltrasonicToPC,&US_RxStruct,0) != pdTRUE)
+			Ultrasonic_flags |= ULTRASONIC_FAILSEND;
+		else
+			Ultrasonic_flags &= ~ULTRASONIC_FAILSEND;
 		Ultrasonic_flags &= ~(ULTRASONIC_CAPTURE_1 | ULTRASONIC_CAPTURE_2 | ULTRASONIC_CAPTURE_3 | ULTRASONIC_CAPTURE_4);
 		if(US_min_dist > ULTRASONIC_T_ZERO && US_min_dist < ULTRASONIC_T_PLUS){
 			Ultrasonic_flags &= ~ULTRASONIC_DEAD;
@@ -519,6 +551,25 @@ void UltrasonicTaskFunction(void const * argument){
 	}
 }
 
+
+
+void BatteryControlTaskFunction(void const * argument){
+//	HAL_ADC_Start_IT(&hadc1);
+//	while(1){
+//		if( (SF & SFLAG_ADC) != 0){																		//If the values have already been updated in the cycle
+//			osDelay(110);																										//Allocates free time for RTOS to go to get busy with other tasks
+//		}
+//		else{																															//In the case the ADC calculations data has not yet been updated (After TIM3 interruption)
+//			BATT_Conversions();																							//Executes calculations and conversions to SOC
+//			HighWaterMarks[3] = uxTaskGetStackHighWaterMark(NULL);
+//			SF |= SFLAG_ADC;																						//Signals the update in Battery voltages calculations and measurements
+//		}
+//	}
+}
+
+void IndicatorsTaskFunction(void const * argument){
+	glcd_draw_string_xy_P(0,0,"Hello!");
+}
 
 void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim){
 	// - For TIMER 1 - //
@@ -555,21 +606,32 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim){
 	}
 }
 
+
+
+void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc){
+//	ADC_read[0] += hadc->Instance->DR;
+//	ADC_read[1] += hadc->Instance->JDR1;
+//	ADC_read[2] += hadc->Instance->JDR2;
+//	adc_sample_count++;
+//	
+//	if(adc_sample_count == 0){
+//				strcpy(Error_Status,"Error: ADC sample count 0");
+//				//Error_Handler();
+//			}
+//			else{
+//				for(int i = 0; i<BATT_N_CELLS; i++){																					//Gets mean value of battery cell voltages in the period time of TIM3
+//					ADC_voltages[i] = ((float)ADC_read[i]/(float)adc_sample_count)*v_step;
+//					ADC_read[i] = 0;																														//Resets accumulation variables for preparing for next cycle 
+//				}
+//			}
+}
+
 void HAL_TIM_PWM_PulseFinishedCallback(TIM_HandleTypeDef *htim){
-//	TIM_OC_InitTypeDef sConfigOC;
-//	if(htim == &htim1){
-//		if((Ultrasonic_flags & ULTRASONIC_TRIGSEL) == 0U){					//If in MODE 0
-//			htim1.Instance->CCMR2 |= TIM_OCMODE_FORCED_INACTIVE;			//Takes CH3 to the forced inactive mode
-//			htim1.Instance->CCMR2 |= (TIM_OCMODE_PWM1 << 8U);					//Takes CH4 to the PWM 1 mode
-//			Ultrasonic_flags |= ULTRASONIC_TRIGSEL;										//Changes flag configuration, meaning that CH2 will now generate pulse
-//		}
-//		else if((Ultrasonic_flags & ULTRASONIC_TRIGSEL) != 0U){					//If in MODE 1
-//			htim1.Instance->CCMR2 |= TIM_OCMODE_PWM1;									//Takes CH3 to PWM 1 mode
-//			htim1.Instance->CCMR2 |= (TIM_OCMODE_FORCED_INACTIVE << 8U);	//Takes CH4 to forced inactive mode
-//			Ultrasonic_flags &= ~ULTRASONIC_TRIGSEL;									//Changes flag configuration, meaning that CH1 will now generate pulse
-//			xSemaphoreGiveFromISR(Ultrasonic_ISR_BS,NULL);						//Gives back semaphore to indicate end of cycle
-//		}
-//	}
+	if(htim == &htim2){
+		if(htim->Channel == HAL_TIM_ACTIVE_CHANNEL_2){
+			HAL_ADC_Start_IT(&hadc1);
+		}
+	}
 }
 /* USER CODE END 4 */
 

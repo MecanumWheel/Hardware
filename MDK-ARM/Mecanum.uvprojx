@@ -335,7 +335,7 @@
               <MiscControls>--C99</MiscControls>
               <Define>USE_HAL_DRIVER,STM32F401xE</Define>
               <Undefine></Undefine>
-              <IncludePath>../Inc;                  ../Drivers/STM32F4xx_HAL_Driver/Inc;                  ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy;                  ../Drivers/CMSIS/Device/ST/STM32F4xx/Include;                  ../Drivers/CMSIS/Include;                ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F;                ../Middlewares/Third_Party/FreeRTOS/Source/include;                ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS</IncludePath>
+              <IncludePath>../Inc;                   ../Drivers/STM32F4xx_HAL_Driver/Inc;                   ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy;                   ../Drivers/CMSIS/Device/ST/STM32F4xx/Include;                   ../Drivers/CMSIS/Include;                 ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F;                 ../Middlewares/Third_Party/FreeRTOS/Source/include;                 ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -498,6 +498,16 @@
               <FileName>stm32f4xx_hal_timebase_TIM.c</FileName>
               <FileType>1</FileType>
               <FilePath>../Src/stm32f4xx_hal_timebase_TIM.c</FilePath>
+            </File>
+            <File>
+              <FileName>Periph_BATT.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Src\Periph_BATT.c</FilePath>
+            </File>
+            <File>
+              <FileName>Periph_BATT.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\Src\Periph_BATT.h</FilePath>
             </File>
           </Files>
         </Group>

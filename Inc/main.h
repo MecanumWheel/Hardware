@@ -60,7 +60,7 @@
 
 // - Ultrasonic defines - //
 //Flags of the Ultrasonic status byte:
-#define ULTRASONIC_TRIGSEL				0x01			//
+#define ULTRASONIC_FAILSEND				0x01			//Flag to record fail in inserting data into PC queue
 #define ULTRASONIC_CAPTURE_1			0x02			//Flag to record sensor 1 data capture 
 #define ULTRASONIC_CAPTURE_2			0x04			//Flag to record sensor 2 data capture
 #define ULTRASONIC_CAPTURE_3			0x08			//Flag to record sensor 3 data capture
@@ -72,6 +72,20 @@
 #define ULTRASONIC_T_ZERO					100				//Base distance for collision avoidance (in mm)
 #define ULTRASONIC_T_PLUS					80				//Distance of maximal object aproach
 #define ULTRASONIC_T_MINUS				120				//Distance for releasing hit collision state 
+
+// - Indicators defines - //
+//For the GLCD library:
+//#define GLCD_CONTROLLER_PCD8544		1
+//#define GLCD_USE_SPI							1
+//#define GLCD_DEVICE_STM32F4XX			1
+
+struct Ultrasonic_Distances{
+	float	Front;
+	float Left;
+	float Back;
+	float Right;
+};
+
 /* USER CODE END Private defines */
 
 void _Error_Handler(char *, int);

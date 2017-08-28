@@ -22,6 +22,7 @@
 "mecanum\main.o"
 "mecanum\freertos.o"
 "mecanum\stm32f4xx_hal_timebase_tim.o"
+"mecanum\periph_batt.o"
 "mecanum\startup_stm32f401xe.o"
 "mecanum\system_stm32f4xx.o"
 "mecanum\tasks.o"
@@ -33,6 +34,14 @@
 "mecanum\list.o"
 "mecanum\timers.o"
 "mecanum\event_groups.o"
+"mecanum\glcd.o"
+"mecanum\graphics.o"
+"mecanum\graphs.o"
+"mecanum\text.o"
+"mecanum\text_tiny.o"
+"mecanum\unit_tests.o"
+"mecanum\stm32f4.o"
+"mecanum\pcd8544.o"
 --library_type=microlib --strict --scatter "Mecanum\Mecanum.sct"
 --diag_suppress=L6329 --summary_stderr --info summarysizes --map --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers
