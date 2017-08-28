@@ -5,4 +5,5 @@
 *.htm
 *.dep
 *.hex
-.mxproject
+prj/.mxproject
+prj/MDK-ARM/prj/prj.build_log.htm

@@ -294,7 +294,7 @@ const uint8_t ADDRES = 128;
 const uint8_t CMD = 0;
 const uint8_t START_SPEED = 0x00;
 const uint8_t DELTA_SPEED = 1;
-const uint8_t MAX_SPEED = 0x7F;
+const uint8_t MOTOR_MAX_SPEED = 0x7F;
 
 typedef enum
 {
@@ -323,18 +323,27 @@ void GeneratePackage(uint8_t* package, uint8_t address, uint8_t cmd, uint8_t val
 	package[4] = 0xFF & (crc);
 }
 
-void MoveMotor(MotorPosition motorPosition, MotorDirection motorDirection, uint8_t speed)
+uint8_t MoveMotor(MotorPosition motorPosition, MotorDirection motorDirection, uint8_t speed)
 {
+	if (speed & ~MOTOR_MAX_SPEED)
+		return 0x01; // speed is too big. Speed must bee from 0 to 127
+	
 	uint8_t package[SIZE];
 		
 	switch(motorPosition)
 	{
 		case FrontLeft:
 		case FrontRight:
-			GeneratePackage(package, 128, (uint_8)motorDirection
+			GeneratePackage(package, 128, (uint8_t)motorDirection, speed);
+			break;
+		case BackLeft:
+		case BackRight:
+			GeneratePackage(package, 129, (uint8_t)motorDirection, speed);
 			break;
 			
 	}
+	HAL_UART_Transmit(&huart3, package, SIZE, 500);
+	return 0x00;
 }
 
 /* USER CODE END 4 */
@@ -363,14 +372,14 @@ void StartMotorControl(void const * argument)
 			HAL_GPIO_WritePin(GPIOC, GPIO_PIN_9, GPIO_PIN_RESET);
 		}
 		
-		if (speed == MAX_SPEED)
+		if (speed == MOTOR_MAX_SPEED)
 		{
 			deltaSpeed = -DELTA_SPEED;
 			HAL_GPIO_WritePin(GPIOC, GPIO_PIN_8, GPIO_PIN_RESET);
 			HAL_GPIO_WritePin(GPIOC, GPIO_PIN_9, GPIO_PIN_SET);
 		}
 		
-		speed &= MAX_SPEED;
+		speed &= MOTOR_MAX_SPEED;
 		message[2] = speed;
 		CalcCRC(message);
 		
