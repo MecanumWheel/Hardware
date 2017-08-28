@@ -7,3 +7,4 @@
 *.hex
 prj/.mxproject
 prj/MDK-ARM/prj/prj.build_log.htm
+*.TMP

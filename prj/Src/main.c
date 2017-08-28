@@ -51,7 +51,7 @@
 #include "cmsis_os.h"
 
 /* USER CODE BEGIN Includes */
-
+#include "motor.h"
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
@@ -62,7 +62,7 @@ osThreadId mainTaskHandle;
 
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
-
+xQueueHandle motorQueue;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -138,7 +138,7 @@ int main(void)
   /* USER CODE END RTOS_THREADS */
 
   /* USER CODE BEGIN RTOS_QUEUES */
-  /* add queues, ... */
+  motorQueue = xQueueCreate( 10, sizeof( FullMotorPackage ) );
   /* USER CODE END RTOS_QUEUES */
  
 
@@ -259,92 +259,7 @@ static void MX_GPIO_Init(void)
 
 }
 
-uint16_t crc16(uint8_t *data_p, uint16_t length)
-{
-	uint16_t crc = 0;
-	for (uint16_t i=0; i<length; i++)
-	{
-		crc = crc ^ (data_p[i]<<8);
-		for (uint16_t j=0; j<8; j++)
-		{
-			if((crc & 0x8000) != 0)
-				crc = (crc << 1) ^ 0x1021;
-			else
-				crc <<= 1;
-		}
-	}
-	return crc;
-}
-
-void CalcCRC(uint8_t* message)
-{
-	uint16_t crc = crc16(message, 3);
-	message[3] = 0xFF & (crc >> 8);
-	message[4] = 0xFF & (crc);
-}
-
-
-void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
-{
-
-}
-
-const uint8_t SIZE = 5;
-const uint8_t ADDRES = 128;
-const uint8_t CMD = 0;
-const uint8_t START_SPEED = 0x00;
-const uint8_t DELTA_SPEED = 1;
-const uint8_t MOTOR_MAX_SPEED = 0x7F;
-
-typedef enum
-{
-  Forward = 0,
-  Backward = 1
-} MotorDirection;
-
-typedef enum
-{
-  FrontLeft,
-  FrontRight,
-	BackLeft,
-	BackRight
-} MotorPosition;
-
-
-const uint8_t PACKAGE_SIZE = 5;
-void GeneratePackage(uint8_t* package, uint8_t address, uint8_t cmd, uint8_t value)
-{
-	package[0] = address;
-	package[1] = cmd;
-	package[2] = value;
-	
-	uint16_t crc = crc16(package, 3);
-	package[3] = 0xFF & (crc >> 8);
-	package[4] = 0xFF & (crc);
-}
-
-uint8_t MoveMotor(MotorPosition motorPosition, MotorDirection motorDirection, uint8_t speed)
-{
-	if (speed & ~MOTOR_MAX_SPEED)
-		return 0x01; // speed is too big. Speed must bee from 0 to 127
-	
-	uint8_t package[SIZE];
-		
-	switch(motorPosition)
-	{
-		case FrontLeft:
-		case FrontRight:
-			GeneratePackage(package, 128, (uint8_t)motorDirection, speed);
-			break;
-		case BackLeft:
-		case BackRight:
-			GeneratePackage(package, 129, (uint8_t)motorDirection, speed);
-			break;
-			
-	}
-	HAL_UART_Transmit(&huart3, package, SIZE, 500);
-	return 0x00;
-}
+/* USER CODE BEGIN 4 */
 
 /* USER CODE END 4 */
 
@@ -354,42 +269,18 @@ void StartMotorControl(void const * argument)
 
   /* USER CODE BEGIN 5 */
   /* Infinite loop */
-	uint8_t message[SIZE];
-	message[0] = ADDRES;
-	message[1] = CMD;
 	
-	int8_t deltaSpeed = DELTA_SPEED;
-	uint8_t speed = START_SPEED;
-
+	uint8_t buffer[sizeof( FullMotorPackage )];
+	FullMotorPackage *fullMotorPackage;
 	for(;;)
   {
-    HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_6);
-		
-		if (speed == 0)
-		{
-			deltaSpeed = DELTA_SPEED;
-			HAL_GPIO_WritePin(GPIOC, GPIO_PIN_8, GPIO_PIN_SET);
-			HAL_GPIO_WritePin(GPIOC, GPIO_PIN_9, GPIO_PIN_RESET);
-		}
-		
-		if (speed == MOTOR_MAX_SPEED)
-		{
-			deltaSpeed = -DELTA_SPEED;
-			HAL_GPIO_WritePin(GPIOC, GPIO_PIN_8, GPIO_PIN_RESET);
-			HAL_GPIO_WritePin(GPIOC, GPIO_PIN_9, GPIO_PIN_SET);
-		}
-		
-		speed &= MOTOR_MAX_SPEED;
-		message[2] = speed;
-		CalcCRC(message);
-		
-		HAL_UART_Transmit(&huart3, message, SIZE, 500);
-		
-		osDelay(50);
-		speed += deltaSpeed;
-
+    xQueueReceive( motorQueue, &( buffer ), portMAX_DELAY ); 
+		fullMotorPackage = (FullMotorPackage*)buffer;
+		MoveMotor(FrontLeft, fullMotorPackage->FrontLeft);
+		MoveMotor(FrontRight, fullMotorPackage->FrontRight);
+ 		MoveMotor(BackLeft, fullMotorPackage->BackLeft);
+		MoveMotor(BackRight, fullMotorPackage->BackRight);
   }
-	//rgknergelursekrshgergergei
   /* USER CODE END 5 */ 
 }
 
@@ -398,10 +289,22 @@ void StartMainTask(void const * argument)
 {
   /* USER CODE BEGIN StartMainTask */
   /* Infinite loop */
+	FullMotorPackage fullMotorPackage;
+	fullMotorPackage.BackLeft.direction = Forward;
+	fullMotorPackage.BackLeft.speed = 10;
+	
   for(;;)
   {
-    osDelay(1);
-  }
+		fullMotorPackage.BackLeft.direction = Forward;
+		fullMotorPackage.BackLeft.speed = 20;
+		xQueueSend( motorQueue, ( void * ) &fullMotorPackage, portMAX_DELAY  );
+    osDelay(1000);
+		
+		fullMotorPackage.BackLeft.direction = Forward;
+		fullMotorPackage.BackLeft.speed = 50;
+		xQueueSend( motorQueue, ( void * ) &fullMotorPackage, portMAX_DELAY  );
+		osDelay(1000);
+	}
   /* USER CODE END StartMainTask */
 }
 
