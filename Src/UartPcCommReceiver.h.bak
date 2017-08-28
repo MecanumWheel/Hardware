@@ -1,0 +1,3 @@
+#pragma onceg
+
+void StartUartPcCommReceiver(void const * argument);

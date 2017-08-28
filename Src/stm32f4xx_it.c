@@ -279,6 +279,20 @@ void USART6_IRQHandler(void)
 }
 
 /* USER CODE BEGIN 1 */
+extern void Uart2HalfCpltHandler(void);
+extern void Uart2CpltHandler(void);
+
+void HAL_UART_RxHalfCpltCallback(UART_HandleTypeDef *huart)
+{
+    if (huart == &huart1)
+        Uart2HalfCpltHandler();
+}
+
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+{
+    if (huart == &huart1)
+        Uart2CpltHandler();
+}
 
 /* USER CODE END 1 */
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

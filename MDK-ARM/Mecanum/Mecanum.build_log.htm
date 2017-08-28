@@ -22,12 +22,22 @@ Dialog DLL:      TCM.DLL V1.21.0.0
  
 <h2>Project:</h2>
 C:\Users\Малышев\Documents\Keil\Mecanum\MDK-ARM\Mecanum.uvprojx
-Project File Date:  08/25/2017
+Project File Date:  08/28/2017
 
 <h2>Output:</h2>
 *** Using Compiler 'V5.06 update 4 (build 422)', folder: 'C:\Games\Keil_v5\ARM\ARMCC\Bin'
 Build target 'Mecanum'
-"Mecanum\Mecanum.axf" - 0 Error(s), 0 Warning(s).
+compiling UartPcCommTransmitter.c...
+..\Src\UartPcCommTransmitter.c(12): error:  #20: identifier "uxMe" is undefined
+          if (uxMe
+..\Src\UartPcCommTransmitter.c(13): error:  #18: expected a ")"
+      }
+..\Src\UartPcCommTransmitter.c(13): error:  #127: expected a statement
+      }
+..\Src\UartPcCommTransmitter.c: 0 warnings, 3 errors
+compiling UartPcCommReceiver.c...
+compiling main.c...
+"Mecanum\Mecanum.axf" - 3 Error(s), 0 Warning(s).
 
 <h2>Software Packages used:</h2>
 
@@ -37,15 +47,28 @@ Package Vendor: ARM
                 CMSIS (Cortex Microcontroller Software Interface Standard)
    * Component: CORE Version: 5.0.1
 
+Package Vendor: Keil
+                http://www.keil.com/pack/Keil.Jansson.1.0.0.pack
+                Keil::Data Exchange:JSON:Jansson:2.7.0
+                Jansson is a C library for encoding, decoding and manipulating JSON data
+   * Component: Jansson Version: 2.7.0
+
 <h2>Collection of Component include folders:</h2>
   C:\Users\Малышев\Documents\Keil\Mecanum\MDK-ARM\RTE\_Mecanum
   C:\Games\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.1\CMSIS\Include
+  C:\Games\Keil_v5\ARM\PACK\Keil\Jansson\1.0.0\src
   C:\Games\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.11.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include
 
 <h2>Collection of Component Files used:</h2>
 
    * Component: ARM::CMSIS:CORE:5.0.1
-Build Time Elapsed:  00:00:00
+
+   * Component: Keil::Data Exchange:JSON:Jansson:2.7.0
+      Include file:  src\jansson.h
+      Source file:   src\jansson_config.c
+      Library file:  lib\jansson_CM3LE.lib
+Target not created.
+Build Time Elapsed:  00:00:14
 </pre>
 </body>
 </html>

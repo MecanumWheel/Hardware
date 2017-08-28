@@ -19,6 +19,8 @@
 "mecanum\main.o"
 "mecanum\freertos.o"
 "mecanum\stm32f4xx_hal_timebase_tim.o"
+"mecanum\uartpccommreceiver.o"
+"mecanum\uartpccommtransmitter.o"
 "mecanum\startup_stm32f401xe.o"
 "mecanum\system_stm32f4xx.o"
 "mecanum\tasks.o"
@@ -30,6 +32,8 @@
 "mecanum\list.o"
 "mecanum\timers.o"
 "mecanum\event_groups.o"
+"C:\Games\Keil_v5\ARM\PACK\Keil\Jansson\1.0.0\lib\jansson_CM3LE.lib"
+"mecanum\jansson_config.o"
 --library_type=microlib --strict --scatter "Mecanum\Mecanum.sct"
 --diag_suppress=L6329 --summary_stderr --info summarysizes --map --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers
