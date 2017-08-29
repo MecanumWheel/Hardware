@@ -284,14 +284,12 @@ extern void Uart2CpltHandler(void);
 
 void HAL_UART_RxHalfCpltCallback(UART_HandleTypeDef *huart)
 {
-    //HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_SET);
     if (huart == &huart1)
         Uart2HalfCpltHandler();
 }
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
-    //HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
     if (huart == &huart1)
         Uart2CpltHandler();
 }

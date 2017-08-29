@@ -284,13 +284,13 @@ extern void Uart2CpltHandler(void);
 
 void HAL_UART_RxHalfCpltCallback(UART_HandleTypeDef *huart)
 {
-    if (huart == &huart1)
+    if (huart == &huart2)
         Uart2HalfCpltHandler();
 }
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
-    if (huart == &huart1)
+    if (huart == &huart2)
         Uart2CpltHandler();
 }
 

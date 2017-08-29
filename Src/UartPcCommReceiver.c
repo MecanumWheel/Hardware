@@ -11,7 +11,7 @@
 
 #define CANCEL_IF(arg) if (arg){jsonRxBufferUsed = 0; jsonRxBufferState = JSON_BUF_PROCESSED; continue;}
 
-extern UART_HandleTypeDef huart1;
+extern UART_HandleTypeDef huart2;
 
 typedef struct
 {
@@ -65,7 +65,7 @@ static void processMotorsRequest(json_t *root)
 
 static void processEventAckRequest(json_t *root)
 {
-    HAL_UART_Transmit_DMA(&huart1, jsonRxBuffer, jsonRxBufferUsed);
+    HAL_UART_Transmit_DMA(&huart2, jsonRxBuffer, jsonRxBufferUsed);
 }
 
 void Uart2HalfCpltHandler(void)
@@ -81,7 +81,7 @@ void Uart2CpltHandler(void)
 void UartPcCommReceiverFunc(void const * argument)
 {
     // Setup
-    HAL_UART_Receive_DMA(&huart1, dmaRxBuffer, sizeof(dmaRxBuffer));
+    HAL_UART_Receive_DMA(&huart2, dmaRxBuffer, sizeof(dmaRxBuffer));
     
     // Infinite loop
     while (1)
@@ -121,7 +121,7 @@ void UartPcCommReceiverFunc(void const * argument)
 
 #define CANCEL_IF(arg) if (arg){jsonRxBufferUsed[!jsonCurrentRxBuffer] = 0; jsonJsonBufferState = JSON_BUF_PROCESSED; continue;}
 
-extern UART_HandleTypeDef huart1;
+extern UART_HandleTypeDef huart2;
 extern xQueueHandle motorQueue;
 
 enum JsonBufferState
@@ -177,7 +177,7 @@ static void processMotorsRequest(json_t *root)
 
 static void processEventAckRequest(json_t *root)
 {
-    HAL_UART_Transmit_DMA(&huart1, jsonRxBuffer[!jsonCurrentRxBuffer], jsonRxBufferUsed[!jsonCurrentRxBuffer]);
+    HAL_UART_Transmit_DMA(&huart2, jsonRxBuffer[!jsonCurrentRxBuffer], jsonRxBufferUsed[!jsonCurrentRxBuffer]);
 }
 
 void Uart2HalfCpltHandler(void)
@@ -193,7 +193,7 @@ void Uart2CpltHandler(void)
 void UartPcCommReceiverFunc(void const * argument)
 {
     // Setup
-    HAL_UART_Receive_DMA(&huart1, dmaRxBuffer, sizeof(dmaRxBuffer));
+    HAL_UART_Receive_DMA(&huart2, dmaRxBuffer, sizeof(dmaRxBuffer));
     
     // Infinite loop
     while (1)

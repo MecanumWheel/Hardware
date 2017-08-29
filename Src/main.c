@@ -143,6 +143,10 @@ int main(void)
   /* USER CODE BEGIN RTOS_THREADS */
   osThreadDef(pcComm, UartPcCommReceiverFunc, osPriorityNormal, 0, 2048);
   osThreadCreate(osThread(pcComm), NULL);
+  
+  osThreadDef(motorControl, StartMotorControl, osPriorityNormal, 0, 128);
+  motorControlHandle = osThreadCreate(osThread(motorControl), NULL);
+  
   /* USER CODE END RTOS_THREADS */
 
   /* USER CODE BEGIN RTOS_QUEUES */
@@ -262,7 +266,7 @@ static void MX_USART6_UART_Init(void)
 {
 
   huart6.Instance = USART6;
-  huart6.Init.BaudRate = 115200;
+  huart6.Init.BaudRate = 9600;
   huart6.Init.WordLength = UART_WORDLENGTH_8B;
   huart6.Init.StopBits = UART_STOPBITS_1;
   huart6.Init.Parity = UART_PARITY_NONE;
