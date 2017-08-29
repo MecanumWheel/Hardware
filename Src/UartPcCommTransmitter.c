@@ -16,6 +16,8 @@
 //    // Infinite loop
 //    while (1)
 //    {
+//        if (huart1.gState != HAL_UART_STATE_READY)
+//            continue;
 //        if (uxQueueMessagesWaiting(usQ))
 //        {
 //            US_RxStruct qMsg;

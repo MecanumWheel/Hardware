@@ -150,6 +150,11 @@ static void handleIncomingByte(uint8_t byte)
     if (jsonRxBufferState == JSON_BUF_WAITING_DATA && byte != '{'
         || jsonRxBufferState == JSON_BUF_RECEIVED)
         return;
+    if (jsonRxBufferUsed[jsonCurrentRxBuffer] >= 512)
+    {
+        jsonRxBufferState = JSON_BUF_WAITING_DATA;
+        jsonRxBufferUsed[jsonCurrentRxBuffer] = 0;
+    }
     if (byte == '}')
         jsonRxBufferState = JSON_BUF_RECEIVED;
     else
