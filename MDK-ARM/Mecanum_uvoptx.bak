@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <ProjectOpt xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="project_optx.xsd">
 
   <SchemaVersion>1.0</SchemaVersion>
@@ -45,7 +45,7 @@
         <PageWidth>79</PageWidth>
         <PageLength>66</PageLength>
         <TabStop>8</TabStop>
-        <ListingPath></ListingPath>
+        <ListingPath />
       </OPTLEX>
       <ListingPage>
         <CreateCListing>1</CreateCListing>
@@ -164,16 +164,16 @@
         <sLrtime>0</sLrtime>
         <bEvRecOn>1</bEvRecOn>
         <nTsel>5</nTsel>
-        <sDll></sDll>
-        <sDllPa></sDllPa>
-        <sDlgDll></sDlgDll>
-        <sDlgPa></sDlgPa>
-        <sIfile></sIfile>
-        <tDll></tDll>
-        <tDllPa></tDllPa>
-        <tDlgDll></tDlgDll>
-        <tDlgPa></tDlgPa>
-        <tIfile></tIfile>
+        <sDll />
+        <sDllPa />
+        <sDlgDll />
+        <sDlgPa />
+        <sIfile />
+        <tDll />
+        <tDllPa />
+        <tDlgDll />
+        <tDlgPa />
+        <tIfile />
         <pMon>STLink\ST-LINKIII-KEIL_SWO.dll</pMon>
       </DebugOpt>
       <TargetDriverDllRegistry>
@@ -190,7 +190,7 @@
         <SetRegEntry>
           <Number>0</Number>
           <Key>ARMDBGFLAGS</Key>
-          <Name></Name>
+          <Name />
         </SetRegEntry>
         <SetRegEntry>
           <Number>0</Number>
@@ -212,20 +212,32 @@
         <Bp>
           <Number>0</Number>
           <Type>0</Type>
-          <LineNumber>201</LineNumber>
+          <LineNumber>541</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>134231158</Address>
+          <Address>134231480</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
           <SizeOfObject>0</SizeOfObject>
           <BreakByAccess>0</BreakByAccess>
           <BreakIfRCount>1</BreakIfRCount>
-          <Filename>C:\Users\РњР°Р»С‹С€РµРІ\Documents\Keil\Mecanum\Src\UartPcCommReceiver.c</Filename>
-          <ExecCommand></ExecCommand>
-          <Expression>\\Mecanum\../Src/UartPcCommReceiver.c\201</Expression>
+          <Filename>C:\Users\РњР°Р»С‹С€РµРІ\Documents\Keil\Mecanum\Src\main.c</Filename>
+          <ExecCommand />
+          <Expression>\\Mecanum\../Src/main.c\541</Expression>
         </Bp>
       </Breakpoint>
+      <WatchWindow1>
+        <Ww>
+          <count>0</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>US_distance</ItemText>
+        </Ww>
+        <Ww>
+          <count>1</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>US_time_acq</ItemText>
+        </Ww>
+      </WatchWindow1>
       <Tracepoint>
         <THDelay>0</THDelay>
       </Tracepoint>
@@ -255,11 +267,11 @@
         <newCpu>0</newCpu>
         <uProt>0</uProt>
       </DebugFlag>
-      <LintExecutable></LintExecutable>
-      <LintConfigFile></LintConfigFile>
+      <LintExecutable />
+      <LintConfigFile />
       <bLintAuto>0</bLintAuto>
-      <Lin2Executable></Lin2Executable>
-      <Lin2ConfigFile></Lin2ConfigFile>
+      <Lin2Executable />
+      <Lin2ConfigFile />
       <bLin2Auto>0</bLin2Auto>
       <bAutoGenD>0</bAutoGenD>
       <bAuto2GenD>0</bAuto2GenD>
