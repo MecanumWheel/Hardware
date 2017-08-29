@@ -335,7 +335,7 @@
               <MiscControls>--C99</MiscControls>
               <Define>USE_HAL_DRIVER,STM32F401xE</Define>
               <Undefine />
-              <IncludePath>../Inc;          ../Drivers/STM32F4xx_HAL_Driver/Inc;          ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy;          ../Drivers/CMSIS/Device/ST/STM32F4xx/Include;          ../Drivers/CMSIS/Include;        ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F;        ../Middlewares/Third_Party/FreeRTOS/Source/include;        ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS</IncludePath>
+              <IncludePath>../Inc;            ../Drivers/STM32F4xx_HAL_Driver/Inc;            ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy;            ../Drivers/CMSIS/Device/ST/STM32F4xx/Include;            ../Drivers/CMSIS/Include;          ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F;          ../Middlewares/Third_Party/FreeRTOS/Source/include;          ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -485,34 +485,34 @@
               <FilePath>../Src/stm32f4xx_hal_timebase_TIM.c</FilePath>
             </File>
             <File>
-              <FileName>UartGps.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\UartGps.c</FilePath>
-            </File>
-            <File>
-              <FileName>UartGps.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\UartGps.h</FilePath>
-            </File>
-            <File>
-              <FileName>JSON.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\JSON.h</FilePath>
-            </File>
-            <File>
-              <FileName>JSON.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\JSON.c</FilePath>
-            </File>
-            <File>
               <FileName>UartPcCommReceiver.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Src\UartPcCommReceiver.c</FilePath>
             </File>
             <File>
+              <FileName>UartPcCommTransmitter.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\Inc\UartPcCommTransmitter.h</FilePath>
+            </File>
+            <File>
               <FileName>UartPcCommReceiver.h</FileName>
               <FileType>5</FileType>
-              <FilePath>..\Src\UartPcCommReceiver.h</FilePath>
+              <FilePath>..\Inc\UartPcCommReceiver.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\Inc\motor.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Src\motor.c</FilePath>
+            </File>
+            <File>
+              <FileName>UartPcCommTransmitter.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Src\UartPcCommTransmitter.c</FilePath>
             </File>
           </Files>
         </Group>

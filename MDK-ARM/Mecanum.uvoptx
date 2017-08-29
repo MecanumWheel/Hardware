@@ -212,9 +212,9 @@
         <Bp>
           <Number>0</Number>
           <Type>0</Type>
-          <LineNumber>43</LineNumber>
+          <LineNumber>150</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>134231566</Address>
+          <Address>134232042</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -223,14 +223,14 @@
           <BreakIfRCount>1</BreakIfRCount>
           <Filename>C:\Users\РњР°Р»С‹С€РµРІ\Documents\Keil\Mecanum\Src\UartPcCommReceiver.c</Filename>
           <ExecCommand />
-          <Expression>\\Mecanum\../Src/UartPcCommReceiver.c\43</Expression>
+          <Expression>\\Mecanum\../Src/UartPcCommReceiver.c\150</Expression>
         </Bp>
         <Bp>
           <Number>1</Number>
           <Type>0</Type>
-          <LineNumber>88</LineNumber>
+          <LineNumber>151</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>134226884</Address>
+          <Address>134232054</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -239,7 +239,7 @@
           <BreakIfRCount>1</BreakIfRCount>
           <Filename>C:\Users\РњР°Р»С‹С€РµРІ\Documents\Keil\Mecanum\Src\UartPcCommReceiver.c</Filename>
           <ExecCommand />
-          <Expression>\\Mecanum\../Src/UartPcCommReceiver.c\88</Expression>
+          <Expression>\\Mecanum\../Src/UartPcCommReceiver.c\151</Expression>
         </Bp>
       </Breakpoint>
       <Tracepoint>
@@ -281,7 +281,7 @@
       <bAuto2GenD>0</bAuto2GenD>
       <SystemViewers>
         <Entry>
-          <Name>System Viewer\USART1</Name>
+          <Name>System Viewer\USART2</Name>
           <WinId>35905</WinId>
         </Entry>
       </SystemViewers>
@@ -555,8 +555,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>.\UartGps.c</PathWithFileName>
-      <FilenameWithoutPath>UartGps.c</FilenameWithoutPath>
+      <PathWithFileName>..\Src\UartPcCommReceiver.c</PathWithFileName>
+      <FilenameWithoutPath>UartPcCommReceiver.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -567,8 +567,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>.\UartGps.h</PathWithFileName>
-      <FilenameWithoutPath>UartGps.h</FilenameWithoutPath>
+      <PathWithFileName>..\Inc\UartPcCommTransmitter.h</PathWithFileName>
+      <FilenameWithoutPath>UartPcCommTransmitter.h</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -579,20 +579,20 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>.\JSON.h</PathWithFileName>
-      <FilenameWithoutPath>JSON.h</FilenameWithoutPath>
+      <PathWithFileName>..\Inc\UartPcCommReceiver.h</PathWithFileName>
+      <FilenameWithoutPath>UartPcCommReceiver.h</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
     <File>
       <GroupNumber>2</GroupNumber>
       <FileNumber>24</FileNumber>
-      <FileType>1</FileType>
+      <FileType>5</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>.\JSON.c</PathWithFileName>
-      <FilenameWithoutPath>JSON.c</FilenameWithoutPath>
+      <PathWithFileName>..\Inc\motor.h</PathWithFileName>
+      <FilenameWithoutPath>motor.h</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -603,20 +603,20 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\Src\UartPcCommReceiver.c</PathWithFileName>
-      <FilenameWithoutPath>UartPcCommReceiver.c</FilenameWithoutPath>
+      <PathWithFileName>..\Src\motor.c</PathWithFileName>
+      <FilenameWithoutPath>motor.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
     <File>
       <GroupNumber>2</GroupNumber>
       <FileNumber>26</FileNumber>
-      <FileType>5</FileType>
+      <FileType>1</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\Src\UartPcCommReceiver.h</PathWithFileName>
-      <FilenameWithoutPath>UartPcCommReceiver.h</FilenameWithoutPath>
+      <PathWithFileName>..\Src\UartPcCommTransmitter.c</PathWithFileName>
+      <FilenameWithoutPath>UartPcCommTransmitter.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
