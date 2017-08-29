@@ -80,7 +80,7 @@
 //#define GLCD_DEVICE_STM32F4XX			1
 
 struct Ultrasonic_Distances{
-	float	Front;
+	float Front;
 	float Left;
 	float Back;
 	float Right;

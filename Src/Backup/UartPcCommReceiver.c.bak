@@ -203,6 +203,7 @@ void UartPcCommReceiverFunc(void const * argument)
     // Infinite loop
     while (1)
     {
+        HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
         if (jsonJsonBufferState == JSON_BUF_PROCESSED)
         {
             if (jsonRxBufferState != JSON_BUF_RECEIVED)

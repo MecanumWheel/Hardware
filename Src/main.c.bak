@@ -51,7 +51,9 @@
 #include "cmsis_os.h"
 
 /* USER CODE BEGIN Includes */
+#include <float.h>
 #include "UartPcCommReceiver.h"
+#include "UartPcCommTransmitter.h"
 #include "motor.h"
 /* USER CODE END Includes */
 
@@ -73,6 +75,7 @@ osThreadId defaultTaskHandle;
 osThreadId motorControlHandle;
 osThreadId UltrasonicTaskHandle;
 osThreadId pcCommRxTaskHandle;
+osThreadId pcCommTxTaskHandle;
 
 SemaphoreHandle_t Ultrasonic_ISR_BS;
 
@@ -167,8 +170,11 @@ int main(void)
   defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
-  osThreadDef(pcComm, UartPcCommReceiverFunc, osPriorityNormal, 0, 2048);
-  osThreadCreate(osThread(pcComm), NULL);
+  osThreadDef(pcCommRx, UartPcCommReceiverFunc, osPriorityNormal, 0, 128);
+  pcCommRxTaskHandle = osThreadCreate(osThread(pcCommRx), NULL);
+  
+  osThreadDef(pcCommTx, UartPcCommTransmitterFunc, osPriorityNormal, 0, 1024);
+  pcCommTxTaskHandle = osThreadCreate(osThread(pcCommTx), NULL);
   
   osThreadDef(motorControl, StartMotorControl, osPriorityNormal, 0, 128);
   motorControlHandle = osThreadCreate(osThread(motorControl), NULL);
@@ -180,6 +186,12 @@ int main(void)
 
   /* USER CODE BEGIN RTOS_QUEUES */
   motorQueue = xQueueCreate( 1, sizeof( FullMotorPackage ) );
+  
+  Ultrasonic_Queue[0] = xQueueCreate(2, sizeof( uint32_t ) );
+  Ultrasonic_Queue[1] = xQueueCreate(2, sizeof( uint32_t ) );
+  Ultrasonic_Queue[2] = xQueueCreate(2, sizeof( uint32_t ) );
+  Ultrasonic_Queue[3] = xQueueCreate(2, sizeof( uint32_t ) );
+  UltrasonicToPC = xQueueCreate(2, sizeof( struct Ultrasonic_Distances ) );
   /* USER CODE END RTOS_QUEUES */
  
 
@@ -390,7 +402,7 @@ static void MX_USART6_UART_Init(void)
 {
 
   huart6.Instance = USART6;
-  huart6.Init.BaudRate = 115200;
+  huart6.Init.BaudRate = 9600;
   huart6.Init.WordLength = UART_WORDLENGTH_8B;
   huart6.Init.StopBits = UART_STOPBITS_1;
   huart6.Init.Parity = UART_PARITY_NONE;
@@ -590,7 +602,7 @@ void StartDefaultTask(void const * argument)
 
 /**
   * @brief  Period elapsed callback in non blocking mode
-  * @note   This function is called  when TIM11 interrupt took place, inside
+  * @note   This function is called  when TIM5 interrupt took place, inside
   * HAL_TIM_IRQHandler(). It makes a direct call to HAL_IncTick() to increment
   * a global variable "uwTick" used as application time base.
   * @param  htim : TIM handle
@@ -601,7 +613,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 /* USER CODE BEGIN Callback 0 */
 
 /* USER CODE END Callback 0 */
-  if (htim->Instance == TIM11) {
+  if (htim->Instance == TIM5) {
     HAL_IncTick();
   }
 /* USER CODE BEGIN Callback 1 */

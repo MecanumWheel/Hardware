@@ -51,7 +51,9 @@
 #include "cmsis_os.h"
 
 /* USER CODE BEGIN Includes */
+#include <float.h>
 #include "UartPcCommReceiver.h"
+#include "UartPcCommTransmitter.h"
 #include "motor.h"
 /* USER CODE END Includes */
 
@@ -71,7 +73,21 @@ osThreadId defaultTaskHandle;
 
 /* USER CODE BEGIN PV */
 osThreadId motorControlHandle;
-xQueueHandle motorQueue;
+osThreadId UltrasonicTaskHandle;
+osThreadId pcCommRxTaskHandle;
+osThreadId pcCommTxTaskHandle;
+
+SemaphoreHandle_t Ultrasonic_ISR_BS;
+
+QueueHandle_t motorQueue;
+QueueHandle_t Ultrasonic_Queue[4];
+QueueHandle_t UltrasonicToPC;
+
+BaseType_t Ultrasonic_HPTW_Q1 = pdFALSE, Ultrasonic_HPTW_Q2 = pdFALSE;
+
+uint8_t Ultrasonic_flags = 0;
+uint8_t Battery_flags = 0;
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -90,6 +106,7 @@ void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
 
 /* USER CODE BEGIN PFP */
 void StartMotorControl(void const * argument);
+void UltrasonicTaskFunction(void const * argument);
 
 /* USER CODE END PFP */
 
@@ -138,7 +155,9 @@ int main(void)
   /* USER CODE END RTOS_MUTEX */
 
   /* USER CODE BEGIN RTOS_SEMAPHORES */
-  /* add semaphores, ... */
+  Ultrasonic_ISR_BS = xSemaphoreCreateBinary();
+  if(!Ultrasonic_ISR_BS)
+      Error_Handler();
   /* USER CODE END RTOS_SEMAPHORES */
 
   /* USER CODE BEGIN RTOS_TIMERS */
@@ -151,16 +170,28 @@ int main(void)
   defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
-  osThreadDef(pcComm, UartPcCommReceiverFunc, osPriorityNormal, 0, 2048);
-  osThreadCreate(osThread(pcComm), NULL);
+  //osThreadDef(pcCommRx, UartPcCommReceiverFunc, osPriorityNormal, 0, 128);
+  //pcCommRxTaskHandle = osThreadCreate(osThread(pcCommRx), NULL);
   
-  osThreadDef(motorControl, StartMotorControl, osPriorityNormal, 0, 128);
-  motorControlHandle = osThreadCreate(osThread(motorControl), NULL);
+  osThreadDef(pcCommTx, UartPcCommTransmitterFunc, osPriorityNormal, 0, 128);
+  pcCommTxTaskHandle = osThreadCreate(osThread(pcCommTx), NULL);
+  
+  //osThreadDef(motorControl, StartMotorControl, osPriorityNormal, 0, 128);
+  //motorControlHandle = osThreadCreate(osThread(motorControl), NULL);
+  
+  osThreadDef(UltrasonicTask, UltrasonicTaskFunction, osPriorityNormal, 0, 128);
+  UltrasonicTaskHandle = osThreadCreate(osThread(UltrasonicTask), NULL);
   
   /* USER CODE END RTOS_THREADS */
 
   /* USER CODE BEGIN RTOS_QUEUES */
   motorQueue = xQueueCreate( 1, sizeof( FullMotorPackage ) );
+  
+  Ultrasonic_Queue[0] = xQueueCreate(2, sizeof( uint32_t ) );
+  Ultrasonic_Queue[1] = xQueueCreate(2, sizeof( uint32_t ) );
+  Ultrasonic_Queue[2] = xQueueCreate(2, sizeof( uint32_t ) );
+  Ultrasonic_Queue[3] = xQueueCreate(2, sizeof( uint32_t ) );
+  UltrasonicToPC = xQueueCreate(2, sizeof( struct Ultrasonic_Distances ) );
   /* USER CODE END RTOS_QUEUES */
  
 
@@ -241,9 +272,9 @@ static void MX_TIM1_Init(void)
   TIM_IC_InitTypeDef sConfigIC;
 
   htim1.Instance = TIM1;
-  htim1.Init.Prescaler = 0;
+  htim1.Init.Prescaler = 15;
   htim1.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim1.Init.Period = 0;
+  htim1.Init.Period = 0xffff;
   htim1.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim1.Init.RepetitionCounter = 0;
   if (HAL_TIM_IC_Init(&htim1) != HAL_OK)
@@ -258,7 +289,7 @@ static void MX_TIM1_Init(void)
     _Error_Handler(__FILE__, __LINE__);
   }
 
-  sConfigIC.ICPolarity = TIM_INPUTCHANNELPOLARITY_RISING;
+  sConfigIC.ICPolarity = TIM_INPUTCHANNELPOLARITY_BOTHEDGE;
   sConfigIC.ICSelection = TIM_ICSELECTION_DIRECTTI;
   sConfigIC.ICPrescaler = TIM_ICPSC_DIV1;
   sConfigIC.ICFilter = 0;
@@ -292,9 +323,9 @@ static void MX_TIM2_Init(void)
   TIM_OC_InitTypeDef sConfigOC;
 
   htim2.Instance = TIM2;
-  htim2.Init.Prescaler = 0;
+  htim2.Init.Prescaler = 15;
   htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim2.Init.Period = 0;
+  htim2.Init.Period = 24999;
   htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   if (HAL_TIM_PWM_Init(&htim2) != HAL_OK)
   {
@@ -309,14 +340,16 @@ static void MX_TIM2_Init(void)
   }
 
   sConfigOC.OCMode = TIM_OCMODE_PWM1;
-  sConfigOC.Pulse = 0;
+  sConfigOC.Pulse = 10;
   sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
-  sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
+  sConfigOC.OCFastMode = TIM_OCFAST_ENABLE;
   if (HAL_TIM_PWM_ConfigChannel(&htim2, &sConfigOC, TIM_CHANNEL_1) != HAL_OK)
   {
     _Error_Handler(__FILE__, __LINE__);
   }
 
+  sConfigOC.Pulse = 12500;
+  sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
   if (HAL_TIM_PWM_ConfigChannel(&htim2, &sConfigOC, TIM_CHANNEL_2) != HAL_OK)
   {
     _Error_Handler(__FILE__, __LINE__);
@@ -369,7 +402,7 @@ static void MX_USART6_UART_Init(void)
 {
 
   huart6.Instance = USART6;
-  huart6.Init.BaudRate = 115200;
+  huart6.Init.BaudRate = 9600;
   huart6.Init.WordLength = UART_WORDLENGTH_8B;
   huart6.Init.StopBits = UART_STOPBITS_1;
   huart6.Init.Parity = UART_PARITY_NONE;
@@ -497,6 +530,7 @@ void UltrasonicTaskFunction(void const * argument){
 	HAL_TIM_PWM_Init(&htim2);									//Activates timer 2, to begin generating pulses
 	HAL_TIM_PWM_Start_IT(&htim2,TIM_CHANNEL_1);
 	while(1){
+        HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
 		//MX_TIM1_Init();													//Sets timer and all channel input captures to rising edge
 		for (uint8_t i=0; i<4 ; i++){
 			channel = i << 2;											//Selects the right timer channel
@@ -569,7 +603,7 @@ void StartDefaultTask(void const * argument)
 
 /**
   * @brief  Period elapsed callback in non blocking mode
-  * @note   This function is called  when TIM11 interrupt took place, inside
+  * @note   This function is called  when TIM5 interrupt took place, inside
   * HAL_TIM_IRQHandler(). It makes a direct call to HAL_IncTick() to increment
   * a global variable "uwTick" used as application time base.
   * @param  htim : TIM handle
@@ -580,7 +614,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 /* USER CODE BEGIN Callback 0 */
 
 /* USER CODE END Callback 0 */
-  if (htim->Instance == TIM11) {
+  if (htim->Instance == TIM5) {
     HAL_IncTick();
   }
 /* USER CODE BEGIN Callback 1 */
@@ -599,6 +633,7 @@ void _Error_Handler(char * file, int line)
   /* User can add his own implementation to report the HAL error return state */
   while(1) 
   {
+      HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
   }
   /* USER CODE END Error_Handler_Debug */ 
 }

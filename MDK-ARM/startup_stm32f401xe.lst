@@ -764,10 +764,9 @@ erwork --depend=mecanum\startup_stm32f401xe.d -omecanum\startup_stm32f401xe.o -
 I..\Inc -IC:\Users\Малышев\Documents\Keil\Mecanum\MDK-ARM\RTE\_Mecanum -IC:\Gam
 es\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.1\CMSIS\Include -IC:\Games\Keil_v5\ARM\PACK\K
 eil\Jansson\1.0.0\src -IC:\Games\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.11.0\Dri
-vers\CMSIS\Device\ST\STM32F4xx\Include --predefine="__EVAL SETA 1" --predefine=
-"__MICROLIB SETA 1" --predefine="__UVISION_VERSION SETA 522" --predefine="_RTE_
- SETA 1" --predefine="STM32F401xE SETA 1" --list=startup_stm32f401xe.lst startu
-p_stm32f401xe.s
+vers\CMSIS\Device\ST\STM32F4xx\Include --predefine="__MICROLIB SETA 1" --predef
+ine="__UVISION_VERSION SETA 522" --predefine="_RTE_ SETA 1" --predefine="STM32F
+401xE SETA 1" --list=startup_stm32f401xe.lst startup_stm32f401xe.s
 
 
 
@@ -1603,4 +1602,4 @@ Symbol: __main
       At line 194 in file startup_stm32f401xe.s
 Comment: __main used once
 2 symbols
-421 symbols in table
+420 symbols in table
