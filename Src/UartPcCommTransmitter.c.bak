@@ -18,11 +18,10 @@ void UartPcCommTransmitterFunc(void const * argument)
     // Infinite loop
     while (1)
     {
-        //if (huart2.gState == HAL_UART_STATE_BUSY_TX)
-            //continue;
+        if (huart2.gState == HAL_UART_STATE_BUSY_TX)
+            continue;
         if (uxQueueMessagesWaiting(UltrasonicToPC))
         {
-            HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
             struct Ultrasonic_Distances qMsg;
             xQueueReceive(UltrasonicToPC, (void*)&qMsg, portMAX_DELAY);
             float values[] = {qMsg.Right, qMsg.Front, qMsg.Left, qMsg.Back};

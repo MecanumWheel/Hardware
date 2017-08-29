@@ -3,7 +3,7 @@
 <title>Static Call Graph - [Mecanum\Mecanum.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image Mecanum\Mecanum.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060422: Last Updated: Wed Aug 30 00:42:04 2017
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060422: Last Updated: Wed Aug 30 03:38:37 2017
 <BR><P>
 <H3>Maximum Stack Usage =        744 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -12,8 +12,8 @@ UartPcCommReceiverFunc &rArr; json_loadb &rArr; parse_json &rArr; parse_value &r
 <H3>
 Mutually Recursive functions
 </H3> <LI><a href="#[1f]">ADC_IRQHandler</a>&nbsp;&nbsp;&nbsp;&rArr;&nbsp;&nbsp;&nbsp;<a href="#[1f]">ADC_IRQHandler</a><BR>
- <LI><a href="#[e6]">json_delete</a>&nbsp;&nbsp;&nbsp;&rArr;&nbsp;&nbsp;&nbsp;<a href="#[11c]">json_decref</a><BR>
- <LI><a href="#[104]">json_decref</a>&nbsp;&nbsp;&nbsp;&rArr;&nbsp;&nbsp;&nbsp;<a href="#[e6]">json_delete</a><BR>
+ <LI><a href="#[102]">hashtable_do_clear</a>&nbsp;&nbsp;&nbsp;&rArr;&nbsp;&nbsp;&nbsp;<a href="#[104]">json_decref</a><BR>
+ <LI><a href="#[11c]">json_decref</a>&nbsp;&nbsp;&nbsp;&rArr;&nbsp;&nbsp;&nbsp;<a href="#[e6]">json_delete</a><BR>
  <LI><a href="#[14f]">parse_object</a>&nbsp;&nbsp;&nbsp;&rArr;&nbsp;&nbsp;&nbsp;<a href="#[14d]">parse_value</a><BR>
  <LI><a href="#[14c]">parse_array</a>&nbsp;&nbsp;&nbsp;&rArr;&nbsp;&nbsp;&nbsp;<a href="#[14d]">parse_value</a><BR>
 </UL>
@@ -1237,7 +1237,7 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> main.o(.constdata)
 </UL>
-<P><STRONG><a name="[58]"></a>UartPcCommTransmitterFunc</STRONG> (Thumb, 158 bytes, Stack size 48 bytes, uartpccommtransmitter.o(i.UartPcCommTransmitterFunc))
+<P><STRONG><a name="[58]"></a>UartPcCommTransmitterFunc</STRONG> (Thumb, 172 bytes, Stack size 48 bytes, uartpccommtransmitter.o(i.UartPcCommTransmitterFunc))
 <BR><BR>[Stack]<UL><LI>Max Depth = 240<LI>Call Chain = UartPcCommTransmitterFunc &rArr; jsonAddFloatArray &rArr; jsonAddFloatValue &rArr; stringAppend &rArr; realloc &rArr; malloc &rArr; internal_alloc &rArr; __aeabi_memcpy
 </UL>
 <BR>[Calls]<UL><LI><a href="#[ca]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_UART_Transmit
@@ -1388,7 +1388,7 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[101]"></a>hashtable_close</STRONG> (Thumb, 16 bytes, Stack size 8 bytes, hashtable.o(i.hashtable_close))
-<BR><BR>[Stack]<UL><LI>Max Depth = 32<LI>Call Chain = hashtable_close &rArr; hashtable_do_clear &rArr; json_decref &rArr;  json_delete (Cycle)
+<BR><BR>[Stack]<UL><LI>Max Depth = 24<LI>Call Chain = hashtable_close &rArr; hashtable_do_clear &rArr;  json_decref (Cycle)
 </UL>
 <BR>[Calls]<UL><LI><a href="#[103]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;jsonp_free
 <LI><a href="#[102]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;hashtable_do_clear
@@ -1415,7 +1415,7 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[10c]"></a>hashtable_set</STRONG> (Thumb, 168 bytes, Stack size 40 bytes, hashtable.o(i.hashtable_set))
-<BR><BR>[Stack]<UL><LI>Max Depth = 88<LI>Call Chain = hashtable_set &rArr; hashtable_find_pair &rArr; strcmp
+<BR><BR>[Stack]<UL><LI>Max Depth = 88<LI>Call Chain = hashtable_set &rArr; json_decref &rArr; json_delete &rArr; hashtable_close &rArr; hashtable_do_clear &rArr;  json_decref (Cycle)
 </UL>
 <BR>[Calls]<UL><LI><a href="#[106]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;jsonp_malloc
 <LI><a href="#[10d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;strcpy
@@ -1475,7 +1475,7 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[11a]"></a>json_array_append_new</STRONG> (Thumb, 68 bytes, Stack size 16 bytes, value.o(i.json_array_append_new))
-<BR><BR>[Stack]<UL><LI>Max Depth = 72<LI>Call Chain = json_array_append_new &rArr; json_decref &rArr; json_delete &rArr;  json_decref (Cycle)
+<BR><BR>[Stack]<UL><LI>Max Depth = 64<LI>Call Chain = json_array_append_new &rArr; json_array_grow &rArr; array_copy &rArr; __aeabi_memcpy4
 </UL>
 <BR>[Calls]<UL><LI><a href="#[11c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;json_decref
 <LI><a href="#[11b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;json_array_grow
@@ -1492,17 +1492,16 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[e6]"></a>json_delete</STRONG> (Thumb, 84 bytes, Stack size 16 bytes, value.o(i.json_delete))
-<BR><BR>[Stack]<UL><LI>Max Depth = 48 + In Cycle
-<LI>Call Chain = json_delete &rArr;  json_decref (Cycle)
+<BR><BR>[Stack]<UL><LI>Max Depth = 40<LI>Call Chain = json_delete &rArr; hashtable_close &rArr; hashtable_do_clear &rArr;  json_decref (Cycle)
 </UL>
-<BR>[Calls]<UL><LI><a href="#[11c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;json_decref
-<LI><a href="#[103]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;jsonp_free
+<BR>[Calls]<UL><LI><a href="#[103]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;jsonp_free
 <LI><a href="#[101]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;hashtable_close
+<LI><a href="#[11c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;json_decref
 </UL>
 <BR>[Called By]<UL><LI><a href="#[57]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UartPcCommReceiverFunc
-<LI><a href="#[11c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;json_decref
 <LI><a href="#[11d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;json_decref
 <LI><a href="#[104]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;json_decref
+<LI><a href="#[11c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;json_decref
 </UL>
 
 <P><STRONG><a name="[152]"></a>json_false</STRONG> (Thumb, 4 bytes, Stack size 0 bytes, value.o(i.json_false))
@@ -1567,10 +1566,10 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[126]"></a>json_object_set_new_nocheck</STRONG> (Thumb, 58 bytes, Stack size 16 bytes, value.o(i.json_object_set_new_nocheck))
-<BR><BR>[Stack]<UL><LI>Max Depth = 104<LI>Call Chain = json_object_set_new_nocheck &rArr; hashtable_set &rArr; hashtable_find_pair &rArr; strcmp
+<BR><BR>[Stack]<UL><LI>Max Depth = 104<LI>Call Chain = json_object_set_new_nocheck &rArr; hashtable_set &rArr; json_decref &rArr; json_delete &rArr; hashtable_close &rArr; hashtable_do_clear &rArr;  json_decref (Cycle)
 </UL>
-<BR>[Calls]<UL><LI><a href="#[11c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;json_decref
-<LI><a href="#[10c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;hashtable_set
+<BR>[Calls]<UL><LI><a href="#[10c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;hashtable_set
+<LI><a href="#[11c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;json_decref
 </UL>
 <BR>[Called By]<UL><LI><a href="#[14f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;parse_object
 </UL>
@@ -1628,7 +1627,6 @@ Global Symbols
 
 <P><STRONG><a name="[103]"></a>jsonp_free</STRONG> (Thumb, 12 bytes, Stack size 0 bytes, memory.o(i.jsonp_free))
 <BR><BR>[Called By]<UL><LI><a href="#[e6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;json_delete
-<LI><a href="#[11b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;json_array_grow
 <LI><a href="#[133]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;strbuffer_close
 <LI><a href="#[123]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;json_object
 <LI><a href="#[119]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;json_array
@@ -1639,11 +1637,11 @@ Global Symbols
 <LI><a href="#[102]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;hashtable_do_clear
 <LI><a href="#[101]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;hashtable_close
 <LI><a href="#[12d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;string_create
+<LI><a href="#[11b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;json_array_grow
 </UL>
 
 <P><STRONG><a name="[106]"></a>jsonp_malloc</STRONG> (Thumb, 12 bytes, Stack size 0 bytes, memory.o(i.jsonp_malloc))
-<BR><BR>[Called By]<UL><LI><a href="#[11b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;json_array_grow
-<LI><a href="#[138]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;strbuffer_init
+<BR><BR>[Called By]<UL><LI><a href="#[138]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;strbuffer_init
 <LI><a href="#[127]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;json_real
 <LI><a href="#[123]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;json_object
 <LI><a href="#[11e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;json_integer
@@ -1655,6 +1653,7 @@ Global Symbols
 <LI><a href="#[10c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;hashtable_set
 <LI><a href="#[10b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;hashtable_init
 <LI><a href="#[12d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;string_create
+<LI><a href="#[11b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;json_array_grow
 </UL>
 
 <P><STRONG><a name="[12c]"></a>jsonp_stringn_nocheck_own</STRONG> (Thumb, 10 bytes, Stack size 8 bytes, value.o(i.jsonp_stringn_nocheck_own))
@@ -2660,7 +2659,7 @@ Local Symbols
 </UL>
 
 <P><STRONG><a name="[11d]"></a>json_decref</STRONG> (Thumb, 24 bytes, Stack size 8 bytes, load.o(i.json_decref))
-<BR><BR>[Stack]<UL><LI>Max Depth = 56<LI>Call Chain = json_decref &rArr; json_delete &rArr;  json_decref (Cycle)
+<BR><BR>[Stack]<UL><LI>Max Depth = 48<LI>Call Chain = json_decref &rArr; json_delete &rArr; hashtable_close &rArr; hashtable_do_clear &rArr;  json_decref (Cycle)
 </UL>
 <BR>[Calls]<UL><LI><a href="#[e6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;json_delete
 </UL>
@@ -2888,15 +2887,16 @@ Local Symbols
 <P><STRONG><a name="[11b]"></a>json_array_grow</STRONG> (Thumb, 76 bytes, Stack size 24 bytes, value.o(i.json_array_grow))
 <BR><BR>[Stack]<UL><LI>Max Depth = 48<LI>Call Chain = json_array_grow &rArr; array_copy &rArr; __aeabi_memcpy4
 </UL>
-<BR>[Calls]<UL><LI><a href="#[f8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;array_copy
-<LI><a href="#[106]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;jsonp_malloc
+<BR>[Calls]<UL><LI><a href="#[106]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;jsonp_malloc
 <LI><a href="#[103]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;jsonp_free
+<LI><a href="#[f8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;array_copy
 </UL>
 <BR>[Called By]<UL><LI><a href="#[11a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;json_array_append_new
 </UL>
 
 <P><STRONG><a name="[11c]"></a>json_decref</STRONG> (Thumb, 24 bytes, Stack size 8 bytes, value.o(i.json_decref))
-<BR><BR>[Stack]<UL><LI>Max Depth = 56<LI>Call Chain = json_decref &rArr; json_delete &rArr;  json_decref (Cycle)
+<BR><BR>[Stack]<UL><LI>Max Depth = 8 + In Cycle
+<LI>Call Chain = json_decref &rArr;  json_delete (Cycle)
 </UL>
 <BR>[Calls]<UL><LI><a href="#[e6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;json_delete
 </UL>
@@ -2930,7 +2930,8 @@ Local Symbols
 </UL>
 
 <P><STRONG><a name="[102]"></a>hashtable_do_clear</STRONG> (Thumb, 34 bytes, Stack size 16 bytes, hashtable.o(i.hashtable_do_clear))
-<BR><BR>[Stack]<UL><LI>Max Depth = 24<LI>Call Chain = hashtable_do_clear &rArr; json_decref &rArr;  json_delete (Cycle)
+<BR><BR>[Stack]<UL><LI>Max Depth = 16 + In Cycle
+<LI>Call Chain = hashtable_do_clear &rArr;  json_decref (Cycle)
 </UL>
 <BR>[Calls]<UL><LI><a href="#[103]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;jsonp_free
 <LI><a href="#[104]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;json_decref
@@ -2970,8 +2971,7 @@ Local Symbols
 </UL>
 
 <P><STRONG><a name="[104]"></a>json_decref</STRONG> (Thumb, 24 bytes, Stack size 8 bytes, hashtable.o(i.json_decref))
-<BR><BR>[Stack]<UL><LI>Max Depth = 8 + In Cycle
-<LI>Call Chain = json_decref &rArr;  json_delete (Cycle)
+<BR><BR>[Stack]<UL><LI>Max Depth = 48<LI>Call Chain = json_decref &rArr; json_delete &rArr; hashtable_close &rArr; hashtable_do_clear &rArr;  json_decref (Cycle)
 </UL>
 <BR>[Calls]<UL><LI><a href="#[e6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;json_delete
 </UL>

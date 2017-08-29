@@ -23,6 +23,7 @@
 "mecanum\motor.o"
 "mecanum\uartpccommtransmitter.o"
 "mecanum\json.o"
+"mecanum\eventcontroller.o"
 "mecanum\startup_stm32f401xe.o"
 "mecanum\system_stm32f4xx.o"
 "mecanum\tasks.o"

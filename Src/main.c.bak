@@ -173,7 +173,7 @@ int main(void)
   osThreadDef(pcCommRx, UartPcCommReceiverFunc, osPriorityNormal, 0, 128);
   pcCommRxTaskHandle = osThreadCreate(osThread(pcCommRx), NULL);
   
-  osThreadDef(pcCommTx, UartPcCommTransmitterFunc, osPriorityNormal, 0, 1024);
+  osThreadDef(pcCommTx, UartPcCommTransmitterFunc, osPriorityNormal, 0, 2048);
   pcCommTxTaskHandle = osThreadCreate(osThread(pcCommTx), NULL);
   
   osThreadDef(motorControl, StartMotorControl, osPriorityNormal, 0, 128);

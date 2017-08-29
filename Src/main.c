@@ -55,6 +55,7 @@
 #include "UartPcCommReceiver.h"
 #include "UartPcCommTransmitter.h"
 #include "motor.h"
+#include "EventController.h"
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
@@ -76,6 +77,7 @@ osThreadId motorControlHandle;
 osThreadId UltrasonicTaskHandle;
 osThreadId pcCommRxTaskHandle;
 osThreadId pcCommTxTaskHandle;
+osThreadId eventControllerTaskHandle;
 
 SemaphoreHandle_t Ultrasonic_ISR_BS;
 
@@ -182,6 +184,9 @@ int main(void)
   osThreadDef(UltrasonicTask, UltrasonicTaskFunction, osPriorityNormal, 0, 128);
   UltrasonicTaskHandle = osThreadCreate(osThread(UltrasonicTask), NULL);
   
+  osThreadDef(EventControllerTask, EventControllerTaskFunc, osPriorityNormal, 0, 128);
+  eventControllerTaskHandle = osThreadCreate(osThread(EventControllerTask), NULL);
+  
   /* USER CODE END RTOS_THREADS */
 
   /* USER CODE BEGIN RTOS_QUEUES */
@@ -192,6 +197,9 @@ int main(void)
   Ultrasonic_Queue[2] = xQueueCreate(2, sizeof( uint32_t ) );
   Ultrasonic_Queue[3] = xQueueCreate(2, sizeof( uint32_t ) );
   UltrasonicToPC = xQueueCreate(2, sizeof( struct Ultrasonic_Distances ) );
+  
+  eventQueue = xQueueCreate(5, sizeof( uint32_t ) );
+  eventAckQueue = xQueueCreate(5, sizeof( uint32_t ) );
   /* USER CODE END RTOS_QUEUES */
  
 

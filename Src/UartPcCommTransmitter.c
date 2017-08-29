@@ -18,8 +18,8 @@ void UartPcCommTransmitterFunc(void const * argument)
     // Infinite loop
     while (1)
     {
-        //if (huart2.gState == HAL_UART_STATE_BUSY_TX)
-            //continue;
+        if (huart2.gState != HAL_UART_STATE_READY)
+            continue;
         if (uxQueueMessagesWaiting(UltrasonicToPC))
         {
             struct Ultrasonic_Distances qMsg;
