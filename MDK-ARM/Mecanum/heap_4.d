@@ -1,8 +1,8 @@
 mecanum\heap_4.o: ../Middlewares/Third_Party/FreeRTOS/Source/portable/MemMang/heap_4.c
-mecanum\heap_4.o: C:\Games\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
+mecanum\heap_4.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
 mecanum\heap_4.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h
-mecanum\heap_4.o: C:\Games\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
-mecanum\heap_4.o: C:\Games\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+mecanum\heap_4.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
+mecanum\heap_4.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 mecanum\heap_4.o: ../Inc/FreeRTOSConfig.h
 mecanum\heap_4.o: ../Inc/main.h
 mecanum\heap_4.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h

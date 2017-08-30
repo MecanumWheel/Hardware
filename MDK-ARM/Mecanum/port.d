@@ -1,7 +1,7 @@
 mecanum\port.o: ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F/port.c
 mecanum\port.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h
-mecanum\port.o: C:\Games\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
-mecanum\port.o: C:\Games\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+mecanum\port.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
+mecanum\port.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 mecanum\port.o: ../Inc/FreeRTOSConfig.h
 mecanum\port.o: ../Inc/main.h
 mecanum\port.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h

@@ -1,7 +1,7 @@
 mecanum\croutine.o: ../Middlewares/Third_Party/FreeRTOS/Source/croutine.c
 mecanum\croutine.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h
-mecanum\croutine.o: C:\Games\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
-mecanum\croutine.o: C:\Games\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+mecanum\croutine.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
+mecanum\croutine.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 mecanum\croutine.o: ../Inc/FreeRTOSConfig.h
 mecanum\croutine.o: ../Inc/main.h
 mecanum\croutine.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h

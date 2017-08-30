@@ -1,9 +1,9 @@
 mecanum\cmsis_os.o: ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.c
-mecanum\cmsis_os.o: C:\Games\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+mecanum\cmsis_os.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
 mecanum\cmsis_os.o: ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.h
 mecanum\cmsis_os.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h
-mecanum\cmsis_os.o: C:\Games\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
-mecanum\cmsis_os.o: C:\Games\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+mecanum\cmsis_os.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
+mecanum\cmsis_os.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 mecanum\cmsis_os.o: ../Inc/FreeRTOSConfig.h
 mecanum\cmsis_os.o: ../Inc/main.h
 mecanum\cmsis_os.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h

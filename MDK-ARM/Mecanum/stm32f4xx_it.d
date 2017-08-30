@@ -7,7 +7,7 @@ mecanum\stm32f4xx_it.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h
 mecanum\stm32f4xx_it.o: ../Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h
 mecanum\stm32f4xx_it.o: ../Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f401xe.h
 mecanum\stm32f4xx_it.o: ../Drivers/CMSIS/Include/core_cm4.h
-mecanum\stm32f4xx_it.o: C:\Games\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+mecanum\stm32f4xx_it.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 mecanum\stm32f4xx_it.o: ../Drivers/CMSIS/Include/core_cmInstr.h
 mecanum\stm32f4xx_it.o: ../Drivers/CMSIS/Include/cmsis_armcc.h
 mecanum\stm32f4xx_it.o: ../Drivers/CMSIS/Include/core_cmFunc.h
@@ -15,7 +15,7 @@ mecanum\stm32f4xx_it.o: ../Drivers/CMSIS/Include/core_cmSimd.h
 mecanum\stm32f4xx_it.o: ../Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h
 mecanum\stm32f4xx_it.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h
 mecanum\stm32f4xx_it.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h
-mecanum\stm32f4xx_it.o: C:\Games\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+mecanum\stm32f4xx_it.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 mecanum\stm32f4xx_it.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h
 mecanum\stm32f4xx_it.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h
 mecanum\stm32f4xx_it.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h
@@ -33,7 +33,7 @@ mecanum\stm32f4xx_it.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
 mecanum\stm32f4xx_it.o: ../Inc/stm32f4xx_it.h
 mecanum\stm32f4xx_it.o: ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.h
 mecanum\stm32f4xx_it.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h
-mecanum\stm32f4xx_it.o: C:\Games\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
+mecanum\stm32f4xx_it.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
 mecanum\stm32f4xx_it.o: ../Inc/FreeRTOSConfig.h
 mecanum\stm32f4xx_it.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h
 mecanum\stm32f4xx_it.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h

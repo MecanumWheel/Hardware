@@ -1,8 +1,8 @@
 mecanum\list.o: ../Middlewares/Third_Party/FreeRTOS/Source/list.c
-mecanum\list.o: C:\Games\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
+mecanum\list.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
 mecanum\list.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h
-mecanum\list.o: C:\Games\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
-mecanum\list.o: C:\Games\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+mecanum\list.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
+mecanum\list.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 mecanum\list.o: ../Inc/FreeRTOSConfig.h
 mecanum\list.o: ../Inc/main.h
 mecanum\list.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h

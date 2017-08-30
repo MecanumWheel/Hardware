@@ -1,7 +1,7 @@
 [PreviousGenFiles]
-HeaderPath=C:/Users/Малышев/Documents/Keil/Mecanum/Inc
+HeaderPath=C:/Users/Gabriel/Desktop/Merge_UART_Ultrasonic_2/Hardware-a3d8cb5bf69b236f2b3e48a003ad512e07c68a40/Inc
 HeaderFiles=stm32f4xx_it.h;stm32f4xx_hal_conf.h;main.h;FreeRTOSConfig.h;
-SourcePath=C:/Users/Малышев/Documents/Keil/Mecanum/Src
+SourcePath=C:/Users/Gabriel/Desktop/Merge_UART_Ultrasonic_2/Hardware-a3d8cb5bf69b236f2b3e48a003ad512e07c68a40/Src
 SourceFiles=stm32f4xx_it.h;stm32f4xx_hal_conf.h;main.h;stm32f4xx_it.c;stm32f4xx_hal_msp.c;main.c;FreeRTOSConfig.h;freertos.c;stm32f4xx_hal_timebase_TIM.c;
 
 [PreviousLibFiles]
